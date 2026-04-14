@@ -707,6 +707,41 @@ struct ComponentRegistry {
         )
 
         #if os(iOS)
+        reg["video-player"] = ComponentEntry(
+            title: "Video Player",
+            icon: "play.rectangle.fill",
+            description: "Thumbnail poster + tap-to-fullscreen AVKit playback",
+            preview: {
+                AnyView(
+                    Group {
+                        if let url = Bundle.main.url(forResource: "sample", withExtension: "mp4") {
+                            SWVideoPlayer(url: url, cornerRadius: 12)
+                                .aspectRatio(16 / 9, contentMode: .fit)
+                        } else {
+                            Text("Add sample.mp4 to bundle")
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    .frame(height: 160)
+                )
+            },
+            fullView: {
+                AnyView(
+                    Group {
+                        if let url = Bundle.main.url(forResource: "sample", withExtension: "mp4") {
+                            SWVideoPlayer(url: url)
+                                .aspectRatio(16 / 9, contentMode: .fit)
+                                .padding()
+                        } else {
+                            Text("Add sample.mp4 to bundle to preview")
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                )
+            },
+            presentation: .push
+        )
+
         reg["scrolling-faq"] = ComponentEntry(
             title: "Scrolling FAQ",
             icon: "bubble.left.and.text.bubble.right",

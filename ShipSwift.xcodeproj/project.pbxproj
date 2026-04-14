@@ -26,6 +26,7 @@
 			);
 			platformFiltersByRelativePath = {
 				"SWPackage/SWComponent/Display/SWScrollingFAQ+iOS.swift" = (ios, );
+				"SWPackage/SWComponent/Display/SWVideoPlayer+iOS.swift" = (ios, );
 				"SWPackage/SWModule/SWAuth/SWAuthView+iOS.swift" = (ios, );
 				"SWPackage/SWModule/SWAuth/SWAuthView+macOS.swift" = (macos, );
 				"SWPackage/SWModule/SWCamera/SWCameraManager+iOS.swift" = (ios, );

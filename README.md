@@ -100,7 +100,7 @@ LineChart · BarChart · AreaChart · DonutChart · RingChart · RadarChart · S
 
 ### SWComponent — UI Components
 
-**Display:** FloatingLabels · ScrollingFAQ · RotatingQuote · BulletPointText · GradientDivider · Label · OnboardingView · OrderView · RootTabView
+**Display:** FloatingLabels · ScrollingFAQ · RotatingQuote · BulletPointText · GradientDivider · Label · MarkdownText · OnboardingView · OrderView · RootTabView · VideoPlayer
 **Feedback:** Alert · Loading · ThinkingIndicator
 **Input:** TabButton · Stepper · AddSheet
 
