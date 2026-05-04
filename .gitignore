@@ -27,7 +27,7 @@ Pods/
 .claude/
 
 # AWS Amplify
-amplify_outputs.json
+**/amplify_outputs.json
 
 # Secrets (never commit real credentials)
 SWSecrets.swift

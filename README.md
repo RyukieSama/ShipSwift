@@ -102,7 +102,7 @@ LineChart · BarChart · AreaChart · DonutChart · RingChart · RadarChart · S
 
 **Display:** FloatingLabels · ScrollingFAQ · RotatingQuote · BulletPointText · GradientDivider · Label · MarkdownText · OnboardingView · OrderView · RootTabView · VideoPlayer
 **Feedback:** Alert · Loading · ThinkingIndicator
-**Input:** TabButton · Stepper · AddSheet
+**Input:** TabButton · Stepper · AddSheet · SearchBar
 
 ### SWModule — Multi-File Frameworks
 

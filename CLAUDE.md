@@ -10,7 +10,7 @@
   - `SWComponent/` — Self-contained UI components organized by category:
     - `Display/` — Display components (FloatingLabels, MarkdownText, ScrollingFAQ, RotatingQuote, BulletPointText, GradientDivider, Label, OnboardingView, OrderView, RootTabView)
     - `Feedback/` — Feedback components (Alert, Loading, ThinkingIndicator)
-    - `Input/` — Input components (TabButton, Stepper, AddSheet)
+    - `Input/` — Input components (TabButton, Stepper, AddSheet, SearchBar)
   - `SWModule/` — Multi-file frameworks (SWAuth, SWCamera, SWPaywall, SWChat, SWSetting, SWSubjectLifting, SWTikTokTracking)
   - `SWUtil/` — Shared utilities (no dependencies on other SWPackage directories)
 - Showcase app views live under `ShipSwift/View/` (HomeView, ChatView, ComponentView, ProPaywallView, RootTabView, SettingView, ShipSwiftAuthView)
