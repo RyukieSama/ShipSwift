@@ -1167,6 +1167,171 @@ struct ComponentView: View {
                     description: "Custom Markdown renderer supporting headings, bold/italic, code blocks, lists, and dividers — ideal for LLM output."
                 )
             }
+
+            // Status Badge — capsule status indicator with five semantic styles
+            NavigationLink {
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 24) {
+                        VStack(alignment: .leading, spacing: 10) {
+                            Text("All styles")
+                                .font(.headline)
+                            HStack(spacing: 8) {
+                                SWStatusBadge(text: "Info", style: .info)
+                                SWStatusBadge(text: "Success", style: .success)
+                                SWStatusBadge(text: "Warning", style: .warning)
+                                SWStatusBadge(text: "Error", style: .error)
+                                SWStatusBadge(text: "Neutral", style: .neutral)
+                            }
+                        }
+
+                        Divider()
+
+                        VStack(alignment: .leading, spacing: 10) {
+                            Text("Order list example")
+                                .font(.headline)
+                            HStack {
+                                Text("Order #1024")
+                                Spacer()
+                                SWStatusBadge(text: "Pending", style: .warning)
+                            }
+                            HStack {
+                                Text("Order #1025")
+                                Spacer()
+                                SWStatusBadge(text: "Making", style: .info)
+                            }
+                            HStack {
+                                Text("Order #1026")
+                                Spacer()
+                                SWStatusBadge(text: "Ready", style: .success)
+                            }
+                            HStack {
+                                Text("Order #1027")
+                                Spacer()
+                                SWStatusBadge(text: "Cancelled", style: .error)
+                            }
+                            HStack {
+                                Text("Order #1028")
+                                Spacer()
+                                SWStatusBadge(text: "Completed", style: .neutral)
+                            }
+                        }
+                    }
+                    .padding()
+                }
+            } label: {
+                ListItem(
+                    title: "Status Badge",
+                    icon: "circle.dotted",
+                    description: "Capsule status badge with five semantic styles (info, success, warning, error, neutral). LocalizedStringKey and String overloads."
+                )
+            }
+
+            // Image Thumbnail — square image tile with same-named ColorSet fallback
+            NavigationLink {
+                ScrollView {
+                    VStack(spacing: 24) {
+                        VStack(spacing: 8) {
+                            SWImageThumbnail(imageName: "PreviewMissingAsset", size: 200, cornerRadius: 24)
+                            Text("200 × 200, radius 24")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+
+                        VStack(spacing: 8) {
+                            SWImageThumbnail(imageName: "PreviewMissingAsset")
+                            Text("Default 120 × 120, radius 18")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+
+                        VStack(spacing: 8) {
+                            SWImageThumbnail(imageName: "PreviewMissingAsset", size: 60, cornerRadius: 12)
+                            Text("60 × 60, radius 12 (cart row)")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+
+                        Text("Tip: register a same-named ColorSet alongside the image set to get a brand-appropriate tint before the image decodes — or as a permanent fallback for empty states.")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal)
+                    }
+                    .padding()
+                }
+            } label: {
+                ListItem(
+                    title: "Image Thumbnail",
+                    icon: "photo.fill",
+                    description: "Square image tile with same-named ColorSet fallback. Renders the tint while the image decodes or when the asset is missing."
+                )
+            }
+
+            // KPI Card — dashboard metric card with icon, animated value, and trailing slot
+            NavigationLink {
+                ScrollView {
+                    VStack(spacing: 20) {
+                        LazyVGrid(
+                            columns: [
+                                GridItem(.flexible(), spacing: 12),
+                                GridItem(.flexible(), spacing: 12)
+                            ],
+                            spacing: 12
+                        ) {
+                            SWKPICard(
+                                title: "Today's Revenue",
+                                value: "$1,234",
+                                icon: "dollarsign.circle.fill",
+                                tint: .brown
+                            ) {
+                                SWKPIDeltaTag(delta: 12.5)
+                            }
+                            SWKPICard(
+                                title: "Cups Sold",
+                                value: "128",
+                                icon: "cup.and.saucer.fill",
+                                tint: .orange
+                            ) {
+                                Text("Unit: cups")
+                                    .font(.caption2)
+                                    .foregroundStyle(.secondary)
+                            }
+                            SWKPICard(
+                                title: "Monthly Revenue",
+                                value: "$24,560",
+                                icon: "calendar",
+                                tint: .green
+                            ) {
+                                SWKPIDeltaTag(delta: -3.2)
+                            }
+                            SWKPICard(
+                                title: "New Members",
+                                value: "42",
+                                icon: "person.2.fill",
+                                tint: .pink
+                            ) {
+                                SWKPIDeltaTag(delta: nil)
+                            }
+                        }
+
+                        Divider()
+
+                        SWKPICard(
+                            title: "Total Members",
+                            value: "1,024",
+                            icon: "person.3.fill",
+                            tint: .blue
+                        )
+                    }
+                    .padding()
+                }
+            } label: {
+                ListItem(
+                    title: "KPI Card",
+                    icon: "rectangle.stack.badge.plus",
+                    description: "Dashboard KPI card with icon, animated numeric value, and customizable trailing slot. Pairs with SWKPIDeltaTag for period-over-period."
+                )
+            }
         } header: {
             #if os(iOS)
             Text("Display")

@@ -672,7 +672,7 @@ struct ComponentRegistry {
             presentation: .push
         )
 
-        // -- Display (9) --
+        // -- Display (12) --
 
         reg["floating-labels"] = ComponentEntry(
             title: "Floating Labels",
@@ -1031,6 +1031,204 @@ struct ComponentRegistry {
 
                         Another paragraph after the divider.
                         """)
+                        .padding()
+                    }
+                )
+            },
+            presentation: .push
+        )
+
+        reg["status-badge"] = ComponentEntry(
+            title: "Status Badge",
+            icon: "circle.dotted",
+            description: "Capsule status badge with five semantic styles (info / success / warning / error / neutral)",
+            preview: {
+                AnyView(
+                    VStack(alignment: .leading, spacing: 6) {
+                        HStack(spacing: 6) {
+                            SWStatusBadge(text: "Info", style: .info)
+                            SWStatusBadge(text: "Success", style: .success)
+                            SWStatusBadge(text: "Warning", style: .warning)
+                        }
+                        HStack(spacing: 6) {
+                            SWStatusBadge(text: "Error", style: .error)
+                            SWStatusBadge(text: "Neutral", style: .neutral)
+                        }
+                    }
+                    .padding()
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                )
+            },
+            fullView: {
+                AnyView(
+                    ScrollView {
+                        VStack(alignment: .leading, spacing: 24) {
+                            VStack(alignment: .leading, spacing: 10) {
+                                Text("All styles")
+                                    .font(.headline)
+                                HStack(spacing: 8) {
+                                    SWStatusBadge(text: "Info", style: .info)
+                                    SWStatusBadge(text: "Success", style: .success)
+                                    SWStatusBadge(text: "Warning", style: .warning)
+                                    SWStatusBadge(text: "Error", style: .error)
+                                    SWStatusBadge(text: "Neutral", style: .neutral)
+                                }
+                            }
+
+                            Divider()
+
+                            VStack(alignment: .leading, spacing: 10) {
+                                Text("Order list example")
+                                    .font(.headline)
+                                ForEach(Array([
+                                    ("Order #1024", "Pending", SWStatusBadgeStyle.warning),
+                                    ("Order #1025", "Making", .info),
+                                    ("Order #1026", "Ready", .success),
+                                    ("Order #1027", "Cancelled", .error),
+                                    ("Order #1028", "Completed", .neutral),
+                                ].enumerated()), id: \.offset) { _, row in
+                                    HStack {
+                                        Text(row.0)
+                                        Spacer()
+                                        SWStatusBadge(text: row.1, style: row.2)
+                                    }
+                                }
+                            }
+                        }
+                        .padding()
+                    }
+                )
+            },
+            presentation: .push
+        )
+
+        reg["image-thumbnail"] = ComponentEntry(
+            title: "Image Thumbnail",
+            icon: "photo.fill",
+            description: "Square image tile with same-named ColorSet as fallback tint",
+            preview: {
+                AnyView(
+                    HStack(spacing: 12) {
+                        SWImageThumbnail(imageName: "PreviewMissingAsset", size: 80, cornerRadius: 14)
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("Image Thumbnail")
+                                .font(.subheadline.weight(.semibold))
+                            Text("ColorSet fallback when image asset is missing or still loading.")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                                .multilineTextAlignment(.leading)
+                        }
+                    }
+                    .padding()
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                )
+            },
+            fullView: {
+                AnyView(
+                    ScrollView {
+                        VStack(spacing: 24) {
+                            VStack(spacing: 8) {
+                                SWImageThumbnail(imageName: "PreviewMissingAsset", size: 160, cornerRadius: 22)
+                                Text("160 × 160, radius 22")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+
+                            VStack(spacing: 8) {
+                                SWImageThumbnail(imageName: "PreviewMissingAsset")
+                                Text("Default 120 × 120, radius 18")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+
+                            VStack(spacing: 8) {
+                                SWImageThumbnail(imageName: "PreviewMissingAsset", size: 60, cornerRadius: 12)
+                                Text("60 × 60, radius 12 (cart row)")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                        .padding()
+                    }
+                )
+            },
+            presentation: .push
+        )
+
+        reg["kpi-card"] = ComponentEntry(
+            title: "KPI Card",
+            icon: "rectangle.stack.badge.plus",
+            description: "Dashboard KPI card with icon, value, animated numeric transition, and customizable trailing slot",
+            preview: {
+                AnyView(
+                    SWKPICard(
+                        title: "Today's Revenue",
+                        value: "$1,234",
+                        icon: "dollarsign.circle.fill",
+                        tint: .brown
+                    ) {
+                        SWKPIDeltaTag(delta: 12.5)
+                    }
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                )
+            },
+            fullView: {
+                AnyView(
+                    ScrollView {
+                        VStack(spacing: 20) {
+                            LazyVGrid(
+                                columns: [
+                                    GridItem(.flexible(), spacing: 12),
+                                    GridItem(.flexible(), spacing: 12)
+                                ],
+                                spacing: 12
+                            ) {
+                                SWKPICard(
+                                    title: "Today's Revenue",
+                                    value: "$1,234",
+                                    icon: "dollarsign.circle.fill",
+                                    tint: .brown
+                                ) {
+                                    SWKPIDeltaTag(delta: 12.5)
+                                }
+                                SWKPICard(
+                                    title: "Cups Sold",
+                                    value: "128",
+                                    icon: "cup.and.saucer.fill",
+                                    tint: .orange
+                                ) {
+                                    Text("Unit: cups")
+                                        .font(.caption2)
+                                        .foregroundStyle(.secondary)
+                                }
+                                SWKPICard(
+                                    title: "Monthly Revenue",
+                                    value: "$24,560",
+                                    icon: "calendar",
+                                    tint: .green
+                                ) {
+                                    SWKPIDeltaTag(delta: -3.2)
+                                }
+                                SWKPICard(
+                                    title: "New Members",
+                                    value: "42",
+                                    icon: "person.2.fill",
+                                    tint: .pink
+                                ) {
+                                    SWKPIDeltaTag(delta: nil)
+                                }
+                            }
+
+                            Divider()
+
+                            SWKPICard(
+                                title: "Total Members",
+                                value: "1,024",
+                                icon: "person.3.fill",
+                                tint: .blue
+                            )
+                        }
                         .padding()
                     }
                 )
