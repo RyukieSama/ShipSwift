@@ -325,8 +325,19 @@ struct HomeView: View {
         .padding(18)
         .background(
             RoundedRectangle(cornerRadius: 14)
-                .fill(Color(.secondarySystemGroupedBackground))
+                .fill(cardBackground)
         )
+    }
+
+    /// Cross-platform card surface color. iOS gets the grouped-list secondary
+    /// background; macOS falls back to the control background to match
+    /// `Form` / `List` chrome on that platform.
+    private var cardBackground: Color {
+#if os(iOS)
+        Color(.secondarySystemGroupedBackground)
+#else
+        Color(NSColor.controlBackgroundColor)
+#endif
     }
 
     /// Build mailto URL with localized subject + body and open the default mail client.

@@ -510,7 +510,8 @@ struct ComponentView: View {
                 )
             }
 
-            // Full-Screen Button — tappable card that expands from a compact 300x300 to fullscreen
+            // Full-Screen Button — iOS 18 zoom transition; unavailable on macOS.
+            #if os(iOS)
             NavigationLink {
                 ScrollView {
                     VStack(spacing: 30) {
@@ -548,6 +549,7 @@ struct ComponentView: View {
                     description: "Tappable card with App Store / Photos style zoom transition — the card geometry-matches into a true full-screen view via iOS 18 `.navigationTransition(.zoom)`. Configurable title, subtitle, footer, gradient, and corner radius."
                 )
             }
+            #endif
         } header: {
             #if os(iOS)
             Text("Animation")

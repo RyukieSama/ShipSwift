@@ -598,6 +598,9 @@ struct ComponentRegistry {
             presentation: .push
         )
 
+        #if os(iOS)
+        // SWFullScreenButton uses iOS 18 `.navigationTransition(.zoom)`, which is
+        // unavailable on macOS. The entry is therefore only registered for iOS.
         reg["full-screen-button"] = ComponentEntry(
             title: "Full-Screen Button",
             icon: "rectangle.expand.vertical",
@@ -613,6 +616,7 @@ struct ComponentRegistry {
             fullView: { AnyView(FullScreenButtonFullDemo()) },
             presentation: .fullScreenCover
         )
+        #endif
 
         // -- Chart (8) --
 
@@ -1958,6 +1962,7 @@ private struct OrderDemoWrapper: View {
     }
 }
 
+#if os(iOS)
 /// Hosts SWFullScreenButton inside its own NavigationStack so the component's
 /// `NavigationLink` + `.navigationTransition(.zoom)` can push the expanded view.
 /// The top-leading xmark dismisses the demo cover; the zoom-back gesture
@@ -1984,3 +1989,4 @@ private struct FullScreenButtonFullDemo: View {
         }
     }
 }
+#endif
