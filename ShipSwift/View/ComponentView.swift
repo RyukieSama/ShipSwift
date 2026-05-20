@@ -491,6 +491,16 @@ struct ComponentView: View {
             }
 
             ComponentNavigationLink {
+                SWStarfield(showsControls: true)
+            } label: {
+                ListItem(
+                    title: "Starfield",
+                    icon: "sparkles",
+                    description: "Multi-layer twinkling starfield rendered via a Metal stitchable shader. Per-cell hash places stars, parallax layers drift downward at different speeds, and a sin-driven term twinkles each star. Tap the gear in this preview to live-tune layers, density, star size, twinkle, and colors."
+                )
+            }
+
+            ComponentNavigationLink {
                 VStack {
                     SWOrbitingLogos(
                         images: ["airpods", "business-shoes", "sunglasses", "tshirt", "wide-brimmed-hat", "golf-gloves", "suit", "golf-gloves"]
