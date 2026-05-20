@@ -541,6 +541,16 @@ struct ComponentView: View {
             }
 
             ComponentNavigationLink {
+                SWAnimatedLoop(showsControls: true)
+            } label: {
+                ListItem(
+                    title: "Animated Loop",
+                    icon: "circle.dashed",
+                    description: "Pulsing concentric rings in four hand-tuned styles — Shape (5 geometric shapes: circle/square/diamond/hexagon/star), Diamond (L1 distance), Neon (circle + angular wobble), Warp (stretched ellipse). Three RGB channels phase-offset for chromatic-aberration sweep. Tap the gear to switch style and live-tune."
+                )
+            }
+
+            ComponentNavigationLink {
                 VStack {
                     SWOrbitingLogos(
                         images: ["airpods", "business-shoes", "sunglasses", "tshirt", "wide-brimmed-hat", "golf-gloves", "suit", "golf-gloves"]

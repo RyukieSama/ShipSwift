@@ -679,6 +679,26 @@ struct ComponentRegistry {
             presentation: .push
         )
 
+        reg["animated-loop"] = ComponentEntry(
+            title: "Animated Loop",
+            icon: "circle.dashed",
+            description: "Metal-shader pulsing rings — 4 styles (Shape / Diamond / Neon / Warp) with RGB chromatic split",
+            preview: {
+                AnyView(
+                    SWAnimatedLoop()
+                        .frame(height: 150)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                )
+            },
+            fullView: {
+                AnyView(
+                    SWAnimatedLoop(showsControls: true)
+                        .ignoresSafeArea()
+                )
+            },
+            presentation: .push
+        )
+
         reg["orbiting-logos"] = ComponentEntry(
             title: "Orbiting Logos",
             icon: "atom",

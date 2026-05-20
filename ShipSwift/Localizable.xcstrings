@@ -1017,6 +1017,24 @@
         }
       }
     },
+    "Cloud" : {
+
+    },
+    "Color 1" : {
+
+    },
+    "Color 2" : {
+
+    },
+    "Color 3" : {
+
+    },
+    "Color 4" : {
+
+    },
+    "Color 5" : {
+
+    },
     "Colors" : {
 
     },
@@ -1120,6 +1138,9 @@
 
     },
     "Feedback" : {
+
+    },
+    "Field" : {
 
     },
     "Forgot Password?" : {
@@ -1312,6 +1333,12 @@
         }
       }
     },
+    "Fractal Clouds" : {
+
+    },
+    "Fractal Clouds Controls" : {
+
+    },
     "Full-stack iOS + AWS backend" : {
 
     },
@@ -1330,6 +1357,9 @@
     "Get Started" : {
 
     },
+    "Glow" : {
+
+    },
     "Google" : {
 
     },
@@ -1343,6 +1373,9 @@
 
     },
     "Hello World" : {
+
+    },
+    "Highlight" : {
 
     },
     "Home" : {
@@ -1527,6 +1560,27 @@
     "Info" : {
 
     },
+    "Ink 1" : {
+
+    },
+    "Ink 2" : {
+
+    },
+    "Ink 3" : {
+
+    },
+    "Ink 4" : {
+
+    },
+    "Ink Smoke" : {
+
+    },
+    "Ink Smoke Controls" : {
+
+    },
+    "Inks" : {
+
+    },
     "Innovation distinguishes between a leader and a follower." : {
 
     },
@@ -1563,6 +1617,15 @@
     "Lifetime updates & new recipes included" : {
 
     },
+    "Lighting" : {
+
+    },
+    "Liquid Chrome" : {
+
+    },
+    "Liquid Chrome Controls" : {
+
+    },
     "Loading data..." : {
 
     },
@@ -1573,6 +1636,9 @@
 
     },
     "Monthly Revenue" : {
+
+    },
+    "Motion" : {
 
     },
     "Multi-page swipe flow with skip support" : {
@@ -1645,6 +1711,9 @@
 
     },
     "Page Content" : {
+
+    },
+    "Palette" : {
 
     },
     "Password" : {
@@ -2034,6 +2103,15 @@
 
     },
     "Photo capture failed" : {
+
+    },
+    "Plasma" : {
+
+    },
+    "Plasma as button border" : {
+
+    },
+    "Plasma Controls" : {
 
     },
     "Privacy" : {
@@ -2561,6 +2639,12 @@
         }
       }
     },
+    "Shadow" : {
+
+    },
+    "Shape" : {
+
+    },
     "Share App" : {
 
     },
@@ -2591,7 +2675,13 @@
     "Signing Out…" : {
 
     },
+    "Silver" : {
+
+    },
     "Skip" : {
+
+    },
+    "Sky" : {
 
     },
     "Sliders" : {
@@ -2604,6 +2694,12 @@
 
     },
     "Standard event types supported by TikTok Ads SDK. Custom events can also be tracked with arbitrary names." : {
+
+    },
+    "Star Color" : {
+
+    },
+    "Starfield Controls" : {
 
     },
     "Start Scan Today" : {
@@ -2643,6 +2739,9 @@
 
     },
     "Supported Events" : {
+
+    },
+    "Surface" : {
 
     },
     "Tab View Template" : {
@@ -2732,6 +2831,9 @@
     "TikTok Tracking" : {
 
     },
+    "Tint" : {
+
+    },
     "Tip: register a same-named ColorSet alongside the image set to get a brand-appropriate tint before the image decodes — or as a permanent fallback for empty states." : {
 
     },
@@ -2812,6 +2914,9 @@
 
     },
     "vs yesterday" : {
+
+    },
+    "Warm Tint" : {
 
     },
     "Warning" : {
