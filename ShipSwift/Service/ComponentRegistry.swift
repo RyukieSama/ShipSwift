@@ -619,6 +619,26 @@ struct ComponentRegistry {
             presentation: .push
         )
 
+        reg["ink-smoke"] = ComponentEntry(
+            title: "Ink Smoke",
+            icon: "drop.fill",
+            description: "Metal-shader domain-warped FBM ink-in-water smoke field",
+            preview: {
+                AnyView(
+                    SWInkSmoke()
+                        .frame(height: 150)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                )
+            },
+            fullView: {
+                AnyView(
+                    SWInkSmoke(showsControls: true)
+                        .ignoresSafeArea()
+                )
+            },
+            presentation: .push
+        )
+
         reg["orbiting-logos"] = ComponentEntry(
             title: "Orbiting Logos",
             icon: "atom",

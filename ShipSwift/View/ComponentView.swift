@@ -511,6 +511,16 @@ struct ComponentView: View {
             }
 
             ComponentNavigationLink {
+                SWInkSmoke(showsControls: true)
+            } label: {
+                ListItem(
+                    title: "Ink Smoke",
+                    icon: "drop.fill",
+                    description: "Domain-warped FBM smoke field — drops of ink diffusing through water. Two-stage warp on 5-octave value noise blends four ink colors plus a wispy glow highlight. Heavier per-pixel cost than Fractal Clouds. Tap the gear to live-tune."
+                )
+            }
+
+            ComponentNavigationLink {
                 VStack {
                     SWOrbitingLogos(
                         images: ["airpods", "business-shoes", "sunglasses", "tshirt", "wide-brimmed-hat", "golf-gloves", "suit", "golf-gloves"]
