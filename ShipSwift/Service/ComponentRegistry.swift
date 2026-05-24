@@ -699,6 +699,66 @@ struct ComponentRegistry {
             presentation: .push
         )
 
+        reg["metaballs"] = ComponentEntry(
+            title: "Metaballs",
+            icon: "circle.hexagonpath.fill",
+            description: "Metal-shader gooey lava-lamp blobs — up to 8 SDF circles merged via smooth-min into one fluid surface",
+            preview: {
+                AnyView(
+                    SWMetaballs()
+                        .frame(height: 150)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                )
+            },
+            fullView: {
+                AnyView(
+                    SWMetaballs(showsControls: true)
+                        .ignoresSafeArea()
+                )
+            },
+            presentation: .push
+        )
+
+        reg["grain-gradient"] = ComponentEntry(
+            title: "Grain Gradient",
+            icon: "circle.grid.cross.fill",
+            description: "Metal-shader soft tri-color noise gradient with film grain — the 2025-era hero background staple",
+            preview: {
+                AnyView(
+                    SWGrainGradient()
+                        .frame(height: 150)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                )
+            },
+            fullView: {
+                AnyView(
+                    SWGrainGradient(showsControls: true)
+                        .ignoresSafeArea()
+                )
+            },
+            presentation: .push
+        )
+
+        reg["halftone"] = ComponentEntry(
+            title: "Halftone",
+            icon: "circle.grid.3x3",
+            description: "Metal-shader print-shop halftone dots over a drifting luminance field — newspaper / Lichtenstein texture",
+            preview: {
+                AnyView(
+                    SWHalftone()
+                        .frame(height: 150)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                )
+            },
+            fullView: {
+                AnyView(
+                    SWHalftone(showsControls: true)
+                        .ignoresSafeArea()
+                )
+            },
+            presentation: .push
+        )
+
         reg["orbiting-logos"] = ComponentEntry(
             title: "Orbiting Logos",
             icon: "atom",

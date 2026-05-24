@@ -551,6 +551,36 @@ struct ComponentView: View {
             }
 
             ComponentNavigationLink {
+                SWMetaballs(showsControls: true)
+            } label: {
+                ListItem(
+                    title: "Metaballs",
+                    icon: "circle.hexagonpath.fill",
+                    description: "Gooey lava-lamp blobs — up to eight signed-distance circles orbit on per-ball randomized radii/speeds/phases and merge into one fluid surface via polynomial smooth-min. Vertical two-color gradient over a flat background. Tap the gear to tune ball count, size, smoothness, and colors."
+                )
+            }
+
+            ComponentNavigationLink {
+                SWGrainGradient(showsControls: true)
+            } label: {
+                ListItem(
+                    title: "Grain Gradient",
+                    icon: "circle.grid.cross.fill",
+                    description: "Soft tri-color noise gradient with film grain — the 2025-era staple hero background (Apple Music posters, Spotify cards, Linear gradients). Two low-frequency noise samples blend three colors; a per-frame high-frequency hash adds the film grain. Tap the gear to live-tune."
+                )
+            }
+
+            ComponentNavigationLink {
+                SWHalftone(showsControls: true)
+            } label: {
+                ListItem(
+                    title: "Halftone",
+                    icon: "circle.grid.3x3",
+                    description: "Print-shop halftone dots over a procedurally drifting luminance field. Rotated cell grid + per-cell dot radius proportional to (1 − luminance) — newspaper / Lichtenstein texture in two ink/paper colors. Tap the gear to tune dot size, angle, contrast, and colors."
+                )
+            }
+
+            ComponentNavigationLink {
                 VStack {
                     SWOrbitingLogos(
                         images: ["airpods", "business-shoes", "sunglasses", "tshirt", "wide-brimmed-hat", "golf-gloves", "suit", "golf-gloves"]

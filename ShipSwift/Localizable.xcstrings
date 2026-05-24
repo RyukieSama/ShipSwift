@@ -1531,6 +1531,56 @@
     "Gradient Divider" : {
 
     },
+    "Grain Gradient" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "颗粒渐变"
+          }
+        }
+      }
+    },
+    "Grain Gradient Controls" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "颗粒渐变控制"
+          }
+        }
+      }
+    },
+    "Grid" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "网格"
+          }
+        }
+      }
+    },
+    "Halftone" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "半色调"
+          }
+        }
+      }
+    },
+    "Halftone Controls" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "半色调控制"
+          }
+        }
+      }
+    },
     "Happiness" : {
 
     },
@@ -1732,6 +1782,16 @@
     "Info" : {
 
     },
+    "Ink" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "墨色"
+          }
+        }
+      }
+    },
     "Ink 1" : {
       "localizations" : {
         "zh-Hans" : {
@@ -1874,6 +1934,26 @@
     "Message bubbles, text input, voice recording waveform" : {
 
     },
+    "Metaballs" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "金属球"
+          }
+        }
+      }
+    },
+    "Metaballs Controls" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "金属球控制"
+          }
+        }
+      }
+    },
     "Module" : {
 
     },
@@ -1968,6 +2048,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "调色板"
+          }
+        }
+      }
+    },
+    "Paper" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "纸张"
           }
         }
       }
