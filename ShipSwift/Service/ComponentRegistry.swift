@@ -881,6 +881,26 @@ struct ComponentRegistry {
             presentation: .push
         )
 
+        reg["simplex-noise"] = ComponentEntry(
+            title: "Simplex Noise",
+            icon: "swirl.circle.righthalf.filled",
+            description: "Metal-shader procedural simplex-noise background (Paper Shaders port) — two layered 2D simplex noises mapped onto a 1–10 color gradient with stepped smooth transitions and wrap-around seam blending",
+            preview: {
+                AnyView(
+                    SWSimplexNoise()
+                        .frame(height: 150)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                )
+            },
+            fullView: {
+                AnyView(
+                    SWSimplexNoise(showsControls: true)
+                        .ignoresSafeArea()
+                )
+            },
+            presentation: .push
+        )
+
         reg["orbiting-logos"] = ComponentEntry(
             title: "Orbiting Logos",
             icon: "atom",

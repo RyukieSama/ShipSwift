@@ -642,6 +642,16 @@ struct ComponentView: View {
             }
 
             ComponentNavigationLink {
+                SWSimplexNoise(showsControls: true)
+            } label: {
+                ListItem(
+                    title: "Simplex Noise",
+                    icon: "swirl.circle.righthalf.filled",
+                    description: "Paper Shaders' simplex-noise procedural background port — two layered 2D simplex noises drive a 1–10 color gradient with stepped smooth transitions and wrap-around seam blending. Tap the gear to tune palette (add/remove colors), scale, steps per color, softness, and motion."
+                )
+            }
+
+            ComponentNavigationLink {
                 VStack {
                     SWOrbitingLogos(
                         images: ["airpods", "business-shoes", "sunglasses", "tshirt", "wide-brimmed-hat", "golf-gloves", "suit", "golf-gloves"]

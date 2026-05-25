@@ -1564,6 +1564,9 @@
     "Google" : {
 
     },
+    "Gradient" : {
+
+    },
     "Gradient Divider" : {
 
     },
@@ -2123,6 +2126,9 @@
           }
         }
       }
+    },
+    "Palette (%lld / 10)" : {
+
     },
     "Paper" : {
       "localizations" : {
@@ -3153,6 +3159,12 @@
           }
         }
       }
+    },
+    "Simplex Noise" : {
+
+    },
+    "Simplex Noise Controls" : {
+
     },
     "Skip" : {
 
