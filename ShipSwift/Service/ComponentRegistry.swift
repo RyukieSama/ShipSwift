@@ -767,6 +767,34 @@ struct ComponentRegistry {
             presentation: .push
         )
 
+        reg["water"] = ComponentEntry(
+            title: "Water",
+            icon: "drop.fill",
+            description: "Metal-shader water ripple image filter (Paper Shaders port) — simplex-noise waves + 6-octave rotated caustic distortion + highlight tint",
+            preview: {
+                AnyView(
+                    SWWater {
+                        Image(.facePicture)
+                            .resizable()
+                            .scaledToFill()
+                    }
+                    .frame(height: 150)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                )
+            },
+            fullView: {
+                AnyView(
+                    SWWater(showsControls: true) {
+                        Image(.facePicture)
+                            .resizable()
+                            .scaledToFill()
+                    }
+                    .ignoresSafeArea()
+                )
+            },
+            presentation: .push
+        )
+
         reg["orbiting-logos"] = ComponentEntry(
             title: "Orbiting Logos",
             icon: "atom",

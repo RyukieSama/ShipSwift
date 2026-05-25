@@ -585,6 +585,20 @@ struct ComponentView: View {
             }
 
             ComponentNavigationLink {
+                SWWater(showsControls: true) {
+                    Image(.facePicture)
+                        .resizable()
+                        .scaledToFill()
+                }
+            } label: {
+                ListItem(
+                    title: "Water",
+                    icon: "drop.fill",
+                    description: "Paper Shaders' water ripple image filter port — simplex-noise wave drift + 6-octave rotated caustic distortion warps the source UVs and adds a sunlight-on-pool highlight tint. Tap the gear to live-tune size, caustic, waves, layering, edges, highlights, and colors."
+                )
+            }
+
+            ComponentNavigationLink {
                 VStack {
                     SWOrbitingLogos(
                         images: ["airpods", "business-shoes", "sunglasses", "tshirt", "wide-brimmed-hat", "golf-gloves", "suit", "golf-gloves"]
