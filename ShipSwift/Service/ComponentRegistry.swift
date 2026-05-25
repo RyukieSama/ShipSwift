@@ -901,6 +901,26 @@ struct ComponentRegistry {
             presentation: .push
         )
 
+        reg["color-panels"] = ComponentEntry(
+            title: "Color Panels",
+            icon: "fan.fill",
+            description: "Metal-shader procedural color-panels background (Paper Shaders port) — pseudo-3D semi-transparent panels rotating around a central vertical axis with 1–7 color palette, edge highlight, skew, blur, fade-in/out and per-panel gradient mixing",
+            preview: {
+                AnyView(
+                    SWColorPanels()
+                        .frame(height: 150)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                )
+            },
+            fullView: {
+                AnyView(
+                    SWColorPanels(showsControls: true)
+                        .ignoresSafeArea()
+                )
+            },
+            presentation: .push
+        )
+
         reg["orbiting-logos"] = ComponentEntry(
             title: "Orbiting Logos",
             icon: "atom",

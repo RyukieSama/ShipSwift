@@ -652,6 +652,16 @@ struct ComponentView: View {
             }
 
             ComponentNavigationLink {
+                SWColorPanels(showsControls: true)
+            } label: {
+                ListItem(
+                    title: "Color Panels",
+                    icon: "fan.fill",
+                    description: "Paper Shaders' color-panels procedural background port — pseudo-3D semi-transparent panels rotating around a central vertical axis. 1–7 color palette + edge highlight, skew, side blur, fade-in/out, per-panel gradient mixing. Tap the gear to live-tune all parameters."
+                )
+            }
+
+            ComponentNavigationLink {
                 VStack {
                     SWOrbitingLogos(
                         images: ["airpods", "business-shoes", "sunglasses", "tshirt", "wide-brimmed-hat", "golf-gloves", "suit", "golf-gloves"]

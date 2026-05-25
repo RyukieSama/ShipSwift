@@ -1159,6 +1159,12 @@
         }
       }
     },
+    "Color Panels" : {
+
+    },
+    "Color Panels Controls" : {
+
+    },
     "Colors" : {
       "localizations" : {
         "zh-Hans" : {
@@ -1267,6 +1273,9 @@
           }
         }
       }
+    },
+    "Edge Highlight" : {
+
     },
     "Email" : {
 
@@ -1994,6 +2003,9 @@
     "Magenta" : {
 
     },
+    "Material" : {
+
+    },
     "Message bubbles, text input, voice recording waveform" : {
 
     },
@@ -2127,7 +2139,13 @@
         }
       }
     },
+    "Palette (%lld / 7)" : {
+
+    },
     "Palette (%lld / 10)" : {
+
+    },
+    "Panel %lld" : {
 
     },
     "Paper" : {
@@ -3166,6 +3184,9 @@
     "Simplex Noise Controls" : {
 
     },
+    "Skew" : {
+
+    },
     "Skip" : {
 
     },
@@ -3498,6 +3519,9 @@
 
     },
     "What You Get" : {
+
+    },
+    "Wheel" : {
 
     },
     "Wisdom" : {
