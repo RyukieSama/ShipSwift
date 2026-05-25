@@ -841,6 +841,26 @@ struct ComponentRegistry {
             presentation: .push
         )
 
+        reg["dot-orbit"] = ComponentEntry(
+            title: "Dot Orbit",
+            icon: "circle.hexagongrid.fill",
+            description: "Metal-shader procedural dot-orbit background (Paper Shaders port) — Voronoi-cell dots orbiting around their cell centers with a 1–10 step-discretized color ramp",
+            preview: {
+                AnyView(
+                    SWDotOrbit()
+                        .frame(height: 150)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                )
+            },
+            fullView: {
+                AnyView(
+                    SWDotOrbit(showsControls: true)
+                        .ignoresSafeArea()
+                )
+            },
+            presentation: .push
+        )
+
         reg["orbiting-logos"] = ComponentEntry(
             title: "Orbiting Logos",
             icon: "atom",

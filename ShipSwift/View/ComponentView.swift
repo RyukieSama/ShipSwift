@@ -622,6 +622,16 @@ struct ComponentView: View {
             }
 
             ComponentNavigationLink {
+                SWDotOrbit(showsControls: true)
+            } label: {
+                ListItem(
+                    title: "Dot Orbit",
+                    icon: "circle.hexagongrid.fill",
+                    description: "Paper Shaders' dot-orbit procedural background port — Voronoi-cell dots orbiting around their cell centers + rotating individually, mapped onto a 1–10 step-discretized color ramp. Tap the gear to tune palette, dot size / range, orbit spreading, palette steps, and motion."
+                )
+            }
+
+            ComponentNavigationLink {
                 VStack {
                     SWOrbitingLogos(
                         images: ["airpods", "business-shoes", "sunglasses", "tshirt", "wide-brimmed-hat", "golf-gloves", "suit", "golf-gloves"]
