@@ -14,7 +14,7 @@
 [![Skills](https://img.shields.io/badge/Skills-Powered-8A2BE2.svg)](https://github.com/signerlabs/shipswift-skills)
 [![ShipSwift MCP server](https://glama.ai/mcp/servers/signerlabs/ShipSwift/badges/score.svg)](https://glama.ai/mcp/servers/signerlabs/ShipSwift)
 
-[Quick Start](#quick-start) · [Components](#components) · [Showcase Demos](#showcase-demos) · [Directory Structure](#directory-structure) · [Recipes](#recipes) · [Contributing](#contributing)
+[Quick Start](#quick-start) · [Components](#components) · [Custom Dev — $5K, 4 weeks](#need-a-custom-app-built-we-do-that-too) · [Showcase Demos](#showcase-demos) · [Recipes](#recipes)
 
 </div>
 
@@ -22,9 +22,27 @@
 
 ## What is ShipSwift?
 
-One command gives your AI everything it needs — production-ready SwiftUI components, full-stack recipes, and the context to build real apps without guessing. Check more [MCP recipes](https://www.shipswift.app/).
+One command gives your AI everything it needs — production-ready SwiftUI components, full-stack recipes, and the context to build real apps without guessing.
+
+> **Browse every recipe live at [shipswift.app](https://www.shipswift.app/)** — searchable catalog, copy-paste source, live previews.
 
 Download the [Showcase App](https://apps.apple.com/us/app/shipswift-mcp-codebase/id6759209764) to preview every component on your device.
+
+---
+
+## Need a custom app built? We do that too.
+
+ShipSwift gets your AI 80% of the way. If you need the last 20% — your unique features, your brand, your backend — wired up by the people who wrote the recipes, **we ship it for you**.
+
+| | |
+|---|---|
+| ⚡ **48-hour demo** | Working prototype on your TestFlight within 2 days of brief |
+| 🚀 **4-week delivery** | Production-ready iOS app, App Store-submission ready |
+| 💵 **From $5,000** | Fixed price, milestone-billed, no hourly surprises |
+
+Built on the same component library you see in this repo, so you keep ownership and can extend forever.
+
+**Get a quote:** [wei@signerlabs.com](mailto:wei@signerlabs.com) · [shipswift.app](https://www.shipswift.app/)
 
 ---
 
@@ -92,7 +110,13 @@ Select a simulator or device, then press **Cmd+R** to build and run.
 
 ### SWAnimation — Animation Components
 
-BeforeAfterSlider · TypewriterText · ShakingIcon · Shimmer · GlowSweep · LightSweep · ScanningOverlay · AnimatedMeshGradient · OrbitingLogos
+**SwiftUI animations:** Shimmer · TypewriterText · ShakingIcon · GlowSweep · LightSweep · ScanningOverlay · AnimatedMeshGradient · BeforeAfterSlider · OrbitingLogos · FullScreenButton
+
+**Metal-shader procedural backgrounds:** Dots · Starfield · FractalClouds · InkSmoke · LiquidChrome · Plasma · AnimatedLoop
+
+**Paper Shaders ports (Metal):** Metaballs · Halftone · Water · LiquidMetal · NeuroNoise · DotOrbit · Voronoi · SimplexNoise · ColorPanels · SmokeRing · Swirl
+
+28 animation components total — see the [Showcase App](https://apps.apple.com/us/app/shipswift-mcp-codebase/id6759209764) for live previews.
 
 ### SWChart — Chart Components
 
