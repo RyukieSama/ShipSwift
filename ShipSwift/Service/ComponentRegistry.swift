@@ -941,6 +941,26 @@ struct ComponentRegistry {
             presentation: .push
         )
 
+        reg["swirl"] = ComponentEntry(
+            title: "Swirl",
+            icon: "hurricane",
+            description: "Metal-shader procedural swirl background (Paper Shaders port) — polar-coordinate angle bands twisted by `pow(length, -twist)` into spirals, folded to a triangular wave, mapped onto a 1–10 color anti-aliased gradient with optional simplex-noise distortion",
+            preview: {
+                AnyView(
+                    SWSwirl()
+                        .frame(height: 150)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                )
+            },
+            fullView: {
+                AnyView(
+                    SWSwirl(showsControls: true)
+                        .ignoresSafeArea()
+                )
+            },
+            presentation: .push
+        )
+
         reg["orbiting-logos"] = ComponentEntry(
             title: "Orbiting Logos",
             icon: "atom",

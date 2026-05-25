@@ -672,6 +672,16 @@ struct ComponentView: View {
             }
 
             ComponentNavigationLink {
+                SWSwirl(showsControls: true)
+            } label: {
+                ListItem(
+                    title: "Swirl",
+                    icon: "hurricane",
+                    description: "Paper Shaders' swirl procedural background port — polar-coordinate angle bands twisted into spirals via `pow(length, -twist)`, folded to a triangular wave, mapped onto a 1–10 color anti-aliased gradient with optional simplex-noise distortion. Tap the gear to tune bands / twist / center / proportion / softness / noise / motion."
+                )
+            }
+
+            ComponentNavigationLink {
                 VStack {
                     SWOrbitingLogos(
                         images: ["airpods", "business-shoes", "sunglasses", "tshirt", "wide-brimmed-hat", "golf-gloves", "suit", "golf-gloves"]
