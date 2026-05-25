@@ -1614,9 +1614,6 @@
     "Heatmap" : {
 
     },
-    "Heatmap Controls" : {
-
-    },
     "Hello World" : {
 
     },
@@ -1966,6 +1963,12 @@
           }
         }
       }
+    },
+    "Liquid Metal" : {
+
+    },
+    "Liquid Metal Controls" : {
+
     },
     "Loading data..." : {
 
@@ -2545,9 +2548,6 @@
 
     },
     "Query: %@" : {
-
-    },
-    "Ramp" : {
 
     },
     "Recent" : {

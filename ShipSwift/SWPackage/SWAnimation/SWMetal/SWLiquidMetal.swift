@@ -148,7 +148,9 @@ private struct SWLiquidMetalRenderer<Content: View>: View {
                     .float(initial.timeScale)
                 ),
                 maxSampleOffset: .zero
+                
             )
+            .shadow(radius: 10)
         }
     }
 }
@@ -288,7 +290,6 @@ private struct SliderRow: View {
             Image(systemName: "apple.logo")
                 .font(.system(size: 300))
         }
-        .shadow(radius: 10)
     }
 }
 

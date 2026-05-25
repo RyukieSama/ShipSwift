@@ -821,6 +821,26 @@ struct ComponentRegistry {
             presentation: .push
         )
 
+        reg["neuro-noise"] = ComponentEntry(
+            title: "Neuro Noise",
+            icon: "waveform.path",
+            description: "Metal-shader procedural neuro-noise background (Paper Shaders port) — 15-layer sine/cosine accumulation creates a glowing web of fluid lines and soft intersections",
+            preview: {
+                AnyView(
+                    SWNeuroNoise()
+                        .frame(height: 150)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                )
+            },
+            fullView: {
+                AnyView(
+                    SWNeuroNoise(showsControls: true)
+                        .ignoresSafeArea()
+                )
+            },
+            presentation: .push
+        )
+
         reg["orbiting-logos"] = ComponentEntry(
             title: "Orbiting Logos",
             icon: "atom",

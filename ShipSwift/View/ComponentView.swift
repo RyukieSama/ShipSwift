@@ -612,6 +612,16 @@ struct ComponentView: View {
             }
 
             ComponentNavigationLink {
+                SWNeuroNoise(showsControls: true)
+            } label: {
+                ListItem(
+                    title: "Neuro Noise",
+                    icon: "waveform.path",
+                    description: "Paper Shaders' neuro-noise procedural background port — 15-layer sine/cosine accumulation with rotated UV creates a glowing organic web of fluid lines. Front / mid / back 3-color palette. Tap the gear to tune palette, brightness, contrast, and speed."
+                )
+            }
+
+            ComponentNavigationLink {
                 VStack {
                     SWOrbitingLogos(
                         images: ["airpods", "business-shoes", "sunglasses", "tshirt", "wide-brimmed-hat", "golf-gloves", "suit", "golf-gloves"]
