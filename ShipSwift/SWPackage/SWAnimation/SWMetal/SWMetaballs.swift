@@ -2,82 +2,61 @@
 //  SWMetaballs.swift
 //  ShipSwift
 //
-//  Gooey metaball blobs rendered via a SwiftUI Metal stitchable shader,
-//  shaded as glowing translucent jelly orbs — every shading cue is driven
-//  by the surface itself rather than baked into a flat gradient:
-//
-//    • Per-ball fake spherical normal blended by influence weight
-//    • Triplet colors mixed by Lambertian term (highlight / mid / shadow)
-//    • Fresnel edge for a translucent glass rim
-//    • Subsurface depth tint — interior darkens / saturates with depth
-//    • Specular hot spot from a key light
-//    • Sub-orb caustic shimmer so the interior never freezes
-//    • Soft external halo so the orb looks emissive
+//  Port of Paper Shaders' Metaballs (https://shaders.paper.design/metaballs,
+//  MIT) to a SwiftUI Metal stitchable shader. Renders a cluster of soft
+//  blobs whose colors blend smoothly where they overlap, over a flat
+//  background. No spherical lighting / rim / specular — straight 2D
+//  shape blending, exactly like the reference.
 //
 //  Requires iOS 17+ / macOS 14+ (SwiftUI `ShaderLibrary`,
 //  `Shader`/`ShaderFunction`, Metal `stitchable`).
 //
 //  Usage:
-//    // Default — violet → cyan → lime jelly orbs, full-screen
+//    // Default — Paper-style 5-color rainbow on black
 //    ZStack {
 //        SWMetaballs()
 //            .ignoresSafeArea()
 //        // Your content here
 //    }
 //
-//    // Recolor — molten lava
+//    // Recolor — sunset palette
 //    SWMetaballs(
-//        color1: .yellow,          // highlight (lit face)
-//        color2: .orange,          // mid       (side)
-//        color3: .red,             // shadow    (back face)
-//        background: .black
+//        colors: [.yellow, .orange, .red, .purple],
+//        background: .black,
+//        count: 6,
+//        size: 0.7
 //    )
 //
 //    // As a section background
 //    myContent
 //        .background { SWMetaballs() }
 //
-//    // Demo / debug — adds a gear button in the navigation bar that
-//    // opens a sheet to tweak every parameter live. Disabled by default.
+//    // Demo / debug — adds a gear button that opens a live-tuning sheet.
+//    // Disabled by default; requires an enclosing `NavigationStack`.
 //    SWMetaballs(showsControls: true)
 //
 //  Parameters:
-//    - color1: Highlight color, painted where the surface faces the key
-//              light (default violet `#6633FF`)
-//    - color2: Mid tone, painted on grazing / side-lit areas
-//              (default cyan `#56CDE3`)
-//    - color3: Shadow color, painted on back-lit / deep interior regions
-//              (default lime `#C7F648`)
-//    - background: Color rendered behind the blobs
-//                  (default near-black `#0A0612`)
-//    - speed: Multiplier on the internal orbit time (default `1.0`)
-//    - ballCount: Number of metaballs, clamped to 1–8 (default `5`)
-//    - ballSize: Base radius of each ball in normalized short-axis units
-//                (default `0.18`)
-//    - smoothness: Smooth-min blend factor — higher = gooier merge
-//                  (default `0.15`)
-//    - edgeSoftness: Width of the SDF → alpha smoothstep — higher =
-//                    softer halo around the merged field (default `0.02`)
-//    - lightingIntensity: How strongly shading leans on the lambertian
-//                         triplet vs. a flat mid tone — 0 = matte flat,
-//                         1 = waxy directional (default `0.85`)
-//    - rimHighlight: Combined gain for the fresnel rim, specular hot
-//                    spot, and external halo — 0 = none, 1 = glassy /
-//                    luminous (default `0.6`)
-//    - innerShadow: Depth-driven edge darkening inside the blob — 0 =
-//                   uniform, 1 = deep pillow (default `0.45`)
-//    - showsControls: When `true`, adds a gear `ToolbarItem` to the
-//                     enclosing `NavigationStack` that opens a
-//                     live-tuning sheet. Default `false`.
+//    - colors: Per-ball palette, 1–8 entries. Ball `i` picks
+//              `colors[i % colors.count]`, so adding more balls than
+//              colors cycles through the palette. Default is the Paper
+//              5-color rainbow (`#CC3333`, `#CC9933`, `#99CC33`,
+//              `#33CC33`, `#33CC99`).
+//    - background: Color rendered behind the blobs (default `.black`).
+//    - speed: Multiplier on the internal drift time (default `1.0`).
+//    - count: Number of blobs, clamped to `1...8` by the shader
+//              (default `5`).
+//    - size: Per-ball size factor in `0...1` (default `0.83`). Larger =
+//              fatter blobs.
+//    - showsControls: When `true`, attaches a gear `ToolbarItem` to the
+//              enclosing `NavigationStack` that opens a live-tuning
+//              sheet. Default `false`.
 //
 //  Notes:
-//    - The shader's loop bound is the static `8` so it always unrolls;
-//      values above 8 are silently truncated.
-//    - Each ball's orbit (radius / speed / phase / size jitter) is
-//      derived from a deterministic hash of its index, so the cluster
-//      animates consistently across frames.
-//    - When `showsControls` is `true`, the gear button is a native
-//      `ToolbarItem` — the call site must be inside a `NavigationStack`.
+//    - SwiftUI shader parameters can't be arrays, so internally the
+//      palette is packed into eight independent `Color` slots plus a
+//      `colorsCount` scalar. Extra slots are filled with `.clear`.
+//    - The Paper original loops 20 balls; we cap at 8 to fit SwiftUI's
+//      stitchable shader instruction budget.
 //
 //  Created by Wei Zhong on 5/24/26.
 //
@@ -87,42 +66,26 @@ import SwiftUI
 // MARK: - Main View
 
 struct SWMetaballs: View {
-    /// Highlight color — painted where the surface faces the key light.
-    var color1: Color = Color(red: 0.4,   green: 0.2,   blue: 1.0)    // #6633FF
-
-    /// Mid tone — painted on grazing / side-lit areas.
-    var color2: Color = Color(red: 0.337, green: 0.804, blue: 0.890)  // #56CDE3
-
-    /// Shadow color — painted on back-lit / deep interior regions.
-    var color3: Color = Color(red: 0.780, green: 0.965, blue: 0.282)  // #C7F648
+    /// Per-ball palette (1–8 entries). Ball `i` picks `colors[i % colors.count]`.
+    var colors: [Color] = [Color.red,
+                           Color.green,
+                           Color.white,
+                           Color.yellow,
+                           Color.blue,
+                           Color.teal,
+                           Color.purple]
 
     /// Color rendered behind the blobs.
-    var background: Color = Color(red: 0.039, green: 0.024, blue: 0.071) // #0A0612
+    var background: Color = .black
 
-    /// Multiplier on the internal orbit time.
+    /// Multiplier on the internal drift time.
     var speed: Float = 1.0
 
-    /// Number of metaballs (clamped to 1–8 by the shader).
-    var ballCount: Int = 5
+    /// Number of blobs (clamped to 1...8 by the shader).
+    var count: Int = 8
 
-    /// Base radius of each ball in normalized short-axis units.
-    var ballSize: Float = 0.18
-
-    /// Smooth-min blend factor — higher = gooier merge.
-    var smoothness: Float = 0.15
-
-    /// Width of the SDF → alpha smoothstep — higher = softer halo.
-    var edgeSoftness: Float = 0.02
-
-    /// Lambertian shading weight (0 = flat mid tone, 1 = full triplet shading).
-    var lightingIntensity: Float = 0.85
-
-    /// Combined gain for fresnel rim, specular hot spot, and external halo
-    /// (0 = matte, 1 = glassy / luminous).
-    var rimHighlight: Float = 0.6
-
-    /// Depth-driven edge darkening inside the blob (0 = uniform, 1 = deep pillow).
-    var innerShadow: Float = 0.45
+    /// Per-ball size factor in 0...1. Larger = fatter blobs.
+    var size: Float = 0.8
 
     /// When `true`, attaches a gear `ToolbarItem` that opens a live-tuning sheet.
     var showsControls: Bool = false
@@ -132,18 +95,11 @@ struct SWMetaballs: View {
             SWMetaballsControlled(initial: self)
         } else {
             SWMetaballsRenderer(
-                color1: color1,
-                color2: color2,
-                color3: color3,
+                colors: colors,
                 background: background,
                 speed: speed,
-                ballCount: ballCount,
-                ballSize: ballSize,
-                smoothness: smoothness,
-                edgeSoftness: edgeSoftness,
-                lightingIntensity: lightingIntensity,
-                rimHighlight: rimHighlight,
-                innerShadow: innerShadow
+                count: count,
+                size: size
             )
         }
     }
@@ -152,98 +108,87 @@ struct SWMetaballs: View {
 // MARK: - Renderer (pure shader binding)
 
 private struct SWMetaballsRenderer: View {
-    let color1: Color
-    let color2: Color
-    let color3: Color
+    let colors: [Color]
     let background: Color
     let speed: Float
-    let ballCount: Int
-    let ballSize: Float
-    let smoothness: Float
-    let edgeSoftness: Float
-    let lightingIntensity: Float
-    let rimHighlight: Float
-    let innerShadow: Float
+    let count: Int
+    let size: Float
 
     @State private var start: Date = .now
 
     var body: some View {
         TimelineView(.animation) { ctx in
             let elapsed = Float(ctx.date.timeIntervalSince(start))
-            // The base layer is `background` — the shader overwrites every
-            // pixel, but this keeps the first frame visually correct before
-            // TimelineView begins ticking.
+            // Pack colors into 8 fixed slots; pad with `.clear` so unused
+            // slots don't contribute (they're never indexed when
+            // colorsCount is correct, but premultiplied alpha keeps
+            // them harmless if they ever were).
+            let slots = paddedSlots(colors)
+            let colorsCount = Float(max(min(colors.count, 8), 1))
+
             background
                 .colorEffect(
                     ShaderLibrary.swMetaballs(
                         .boundingRect,
                         .float(elapsed),
                         .float(speed),
-                        .float(Float(ballCount)),
-                        .float(ballSize),
-                        .float(smoothness),
-                        .float(edgeSoftness),
-                        .float(lightingIntensity),
-                        .float(rimHighlight),
-                        .float(innerShadow),
-                        .color(color1),
-                        .color(color2),
-                        .color(color3),
+                        .float(Float(count)),
+                        .float(size),
+                        .float(colorsCount),
+                        .color(slots[0]),
+                        .color(slots[1]),
+                        .color(slots[2]),
+                        .color(slots[3]),
+                        .color(slots[4]),
+                        .color(slots[5]),
+                        .color(slots[6]),
+                        .color(slots[7]),
                         .color(background)
                     )
                 )
         }
+    }
+
+    private func paddedSlots(_ src: [Color]) -> [Color] {
+        var out = Array(src.prefix(8))
+        while out.count < 8 {
+            out.append(.clear)
+        }
+        return out
     }
 }
 
 // MARK: - Controlled Wrapper (gear toolbar item + live sheet)
 
 private struct SWMetaballsControlled: View {
-    @State private var color1: Color
-    @State private var color2: Color
-    @State private var color3: Color
+    @State private var colors: [Color]
     @State private var background: Color
     @State private var speed: Float
     /// Float-backed so it can drive a Slider; rendered as `Int(.rounded())`.
-    @State private var ballCount: Float
-    @State private var ballSize: Float
-    @State private var smoothness: Float
-    @State private var edgeSoftness: Float
-    @State private var lightingIntensity: Float
-    @State private var rimHighlight: Float
-    @State private var innerShadow: Float
+    @State private var count: Float
+    @State private var size: Float
 
     @State private var showSheet = false
 
     init(initial: SWMetaballs) {
-        _color1            = State(initialValue: initial.color1)
-        _color2            = State(initialValue: initial.color2)
-        _color3            = State(initialValue: initial.color3)
-        _background        = State(initialValue: initial.background)
-        _speed             = State(initialValue: initial.speed)
-        _ballCount         = State(initialValue: Float(initial.ballCount))
-        _ballSize          = State(initialValue: initial.ballSize)
-        _smoothness        = State(initialValue: initial.smoothness)
-        _edgeSoftness      = State(initialValue: initial.edgeSoftness)
-        _lightingIntensity = State(initialValue: initial.lightingIntensity)
-        _rimHighlight      = State(initialValue: initial.rimHighlight)
-        _innerShadow       = State(initialValue: initial.innerShadow)
+        // Pad up to a stable 5-slot working set for the picker UI so the
+        // sliders don't shuffle when the palette length changes.
+        var palette = initial.colors
+        while palette.count < 5 { palette.append(.white) }
+        _colors     = State(initialValue: palette)
+        _background = State(initialValue: initial.background)
+        _speed      = State(initialValue: initial.speed)
+        _count      = State(initialValue: Float(initial.count))
+        _size       = State(initialValue: initial.size)
     }
 
     var body: some View {
         SWMetaballsRenderer(
-            color1: color1,
-            color2: color2,
-            color3: color3,
+            colors: colors,
             background: background,
             speed: speed,
-            ballCount: Int(ballCount.rounded()),
-            ballSize: ballSize,
-            smoothness: smoothness,
-            edgeSoftness: edgeSoftness,
-            lightingIntensity: lightingIntensity,
-            rimHighlight: rimHighlight,
-            innerShadow: innerShadow
+            count: Int(count.rounded()),
+            size: size
         )
         .ignoresSafeArea()
         .toolbar {
@@ -258,18 +203,11 @@ private struct SWMetaballsControlled: View {
         }
         .sheet(isPresented: $showSheet) {
             SWMetaballsControlsSheet(
-                color1: $color1,
-                color2: $color2,
-                color3: $color3,
+                colors: $colors,
                 background: $background,
                 speed: $speed,
-                ballCount: $ballCount,
-                ballSize: $ballSize,
-                smoothness: $smoothness,
-                edgeSoftness: $edgeSoftness,
-                lightingIntensity: $lightingIntensity,
-                rimHighlight: $rimHighlight,
-                innerShadow: $innerShadow
+                count: $count,
+                size: $size
             )
             .presentationDetents([.medium, .large])
             .presentationDragIndicator(.visible)
@@ -280,42 +218,34 @@ private struct SWMetaballsControlled: View {
 // MARK: - Controls Sheet
 
 private struct SWMetaballsControlsSheet: View {
-    @Binding var color1: Color
-    @Binding var color2: Color
-    @Binding var color3: Color
+    @Binding var colors: [Color]
     @Binding var background: Color
     @Binding var speed: Float
-    @Binding var ballCount: Float
-    @Binding var ballSize: Float
-    @Binding var smoothness: Float
-    @Binding var edgeSoftness: Float
-    @Binding var lightingIntensity: Float
-    @Binding var rimHighlight: Float
-    @Binding var innerShadow: Float
+    @Binding var count: Float
+    @Binding var size: Float
 
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
         NavigationStack {
             Form {
-                Section("Colors") {
-                    ColorPicker("Color 1 (highlight)", selection: $color1,     supportsOpacity: false)
-                    ColorPicker("Color 2 (mid)",       selection: $color2,     supportsOpacity: false)
-                    ColorPicker("Color 3 (shadow)",    selection: $color3,     supportsOpacity: false)
-                    ColorPicker("Background",          selection: $background, supportsOpacity: false)
+                Section("Palette") {
+                    ForEach(colors.indices, id: \.self) { i in
+                        ColorPicker(
+                            "Color \(i + 1)",
+                            selection: Binding(
+                                get: { colors[i] },
+                                set: { colors[i] = $0 }
+                            ),
+                            supportsOpacity: false
+                        )
+                    }
+                    ColorPicker("Background", selection: $background, supportsOpacity: false)
                 }
 
                 Section("Field") {
-                    SliderRow(label: "Ball Count",    value: $ballCount,    range: 1...8,      step: 1)
-                    SliderRow(label: "Ball Size",     value: $ballSize,     range: 0.05...0.5, step: 0.01)
-                    SliderRow(label: "Smoothness",    value: $smoothness,   range: 0.01...0.5, step: 0.01)
-                    SliderRow(label: "Edge Softness", value: $edgeSoftness, range: 0.001...0.2, step: 0.001)
-                }
-
-                Section("Shading") {
-                    SliderRow(label: "Lighting",     value: $lightingIntensity, range: 0...1, step: 0.01)
-                    SliderRow(label: "Rim Highlight", value: $rimHighlight,      range: 0...1, step: 0.01)
-                    SliderRow(label: "Inner Shadow", value: $innerShadow,       range: 0...1, step: 0.01)
+                    SliderRow(label: "Count", value: $count, range: 1...8, step: 1)
+                    SliderRow(label: "Size",  value: $size,  range: 0...1, step: 0.01)
                 }
 
                 Section("Motion") {
@@ -354,39 +284,19 @@ private struct SliderRow: View {
         }
     }
 
-    /// Integer-stepped sliders look cleaner as whole numbers.
+    /// Integer-stepped sliders display as whole numbers.
     private var formattedValue: String {
         step >= 1
             ? "\(Int(value.rounded()))"
-            : String(format: "%.3f", value)
+            : String(format: "%.2f", value)
     }
 }
 
 // MARK: - Preview
 
-#Preview("Aurora (default)") {
+#Preview {
     // ToolbarItem requires an enclosing NavigationStack to render.
     NavigationStack {
         SWMetaballs(showsControls: true)
     }
-}
-
-#Preview("Lava") {
-    SWMetaballs(
-        color1: Color(red: 1.0, green: 0.85, blue: 0.2),
-        color2: Color(red: 1.0, green: 0.35, blue: 0.05),
-        color3: Color(red: 0.45, green: 0.05, blue: 0.05),
-        background: .black
-    )
-    .ignoresSafeArea()
-}
-
-#Preview("Ocean") {
-    SWMetaballs(
-        color1: Color(red: 0.55, green: 0.85, blue: 1.0),
-        color2: Color(red: 0.15, green: 0.45, blue: 0.85),
-        color3: Color(red: 0.05, green: 0.1,  blue: 0.35),
-        background: Color(red: 0.02, green: 0.03, blue: 0.08)
-    )
-    .ignoresSafeArea()
 }

@@ -977,9 +977,6 @@
     "Category" : {
 
     },
-    "Chart" : {
-
-    },
     "Channel 1" : {
       "localizations" : {
         "zh-Hans" : {
@@ -1009,6 +1006,9 @@
           }
         }
       }
+    },
+    "Chart" : {
+
     },
     "Chat Bubble" : {
 
@@ -1093,6 +1093,9 @@
           }
         }
       }
+    },
+    "Color %lld" : {
+
     },
     "Color 1" : {
       "localizations" : {
@@ -2517,6 +2520,9 @@
     "Resources" : {
 
     },
+    "Restore Purchases" : {
+
+    },
     "Rings" : {
       "localizations" : {
         "zh-Hans" : {
@@ -2526,9 +2532,6 @@
           }
         }
       }
-    },
-    "Restore Purchases" : {
-
     },
     "Search" : {
 
@@ -3293,9 +3296,6 @@
     "Transcribing..." : {
 
     },
-    "Trending" : {
-
-    },
     "Transform" : {
       "localizations" : {
         "zh-Hans" : {
@@ -3305,6 +3305,9 @@
           }
         }
       }
+    },
+    "Trending" : {
+
     },
     "Type a message..." : {
 
