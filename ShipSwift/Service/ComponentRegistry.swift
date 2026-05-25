@@ -742,18 +742,26 @@ struct ComponentRegistry {
         reg["halftone"] = ComponentEntry(
             title: "Halftone",
             icon: "circle.grid.3x3",
-            description: "Metal-shader print-shop halftone dots over a drifting luminance field — newspaper / Lichtenstein texture",
+            description: "Metal-shader halftone image filter (Paper Shaders port) — 4 dot styles × 2 grids + CMYK plates, applied to any source view",
             preview: {
                 AnyView(
-                    SWHalftone()
-                        .frame(height: 150)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                    SWHalftone {
+                        Image(.facePicture)
+                            .resizable()
+                            .scaledToFill()
+                    }
+                    .frame(height: 150)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
                 )
             },
             fullView: {
                 AnyView(
-                    SWHalftone(showsControls: true)
-                        .ignoresSafeArea()
+                    SWHalftone(showsControls: true) {
+                        Image(.facePicture)
+                            .resizable()
+                            .scaledToFill()
+                    }
+                    .ignoresSafeArea()
                 )
             },
             presentation: .push

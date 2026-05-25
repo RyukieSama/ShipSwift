@@ -571,12 +571,16 @@ struct ComponentView: View {
             }
 
             ComponentNavigationLink {
-                SWHalftone(showsControls: true)
+                SWHalftone(showsControls: true) {
+                    Image(.facePicture)
+                        .resizable()
+                        .scaledToFill()
+                }
             } label: {
                 ListItem(
                     title: "Halftone",
                     icon: "circle.grid.3x3",
-                    description: "Print-shop halftone dots over a procedurally drifting luminance field. Rotated cell grid + per-cell dot radius proportional to (1 − luminance) — newspaper / Lichtenstein texture in two ink/paper colors. Tap the gear to tune dot size, angle, contrast, and colors."
+                    description: "Paper Shaders' halftone image filter port — wraps any source view in 4 dot styles (classic / gooey / holes / soft) × 2 grids (square / hex), plus a 4-channel CMYK plate mode. Toggle inverted, original colors, and procedural grain. Tap the gear to live-tune."
                 )
             }
 

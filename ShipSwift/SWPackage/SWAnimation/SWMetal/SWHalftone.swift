@@ -2,185 +2,330 @@
 //  SWHalftone.swift
 //  ShipSwift
 //
-//  Print-shop halftone dots over a procedurally drifting luminance field,
-//  rendered via a SwiftUI Metal stitchable shader. The screen is quantized
-//  into a rotated cell grid; each cell draws one ink dot whose radius is
-//  proportional to `(1 - luminance)` — dark = big dot, bright = small or
-//  empty. Output reads like a newspaper-print / Lichtenstein texture.
+//  Port of Paper Shaders' halftone family
+//  (https://shaders.paper.design, MIT) as a SwiftUI Metal `layerEffect`.
+//  Wraps any view in a halftone print filter — the child content is
+//  treated as a source image, quantized into a rotated cell grid, and
+//  rendered as dots whose size tracks the local luminance (or CMYK
+//  channel coverage in `.cmyk` mode).
+//
+//  Style menu:
+//    • `.dotsClassic` — crisp newspaper circles (square or hex grid)
+//    • `.dotsGooey`   — soft merging ink puddles
+//    • `.dotsHoles`   — donut-style negative dots that fill the cell
+//                       once they get big enough
+//    • `.dotsSoft`    — fuzzy radial falloff
+//    • `.cmyk`        — 4-channel CMYK ink at 15° / 75° / 0° / 45°,
+//                       multiplicatively layered on a paper background
 //
 //  Requires iOS 17+ / macOS 14+ (SwiftUI `ShaderLibrary`,
 //  `Shader`/`ShaderFunction`, Metal `stitchable`).
 //
 //  Usage:
-//    // Default — black ink on cream paper, full-screen
-//    ZStack {
-//        SWHalftone()
-//            .ignoresSafeArea()
-//        // Your content here
+//    // Default — gooey black dots on white paper, square grid
+//    SWHalftone {
+//        Image(.facePicture)
+//            .resizable()
+//            .scaledToFill()
 //    }
 //
-//    // Recolor — magenta on white, larger dots
+//    // CMYK printing look
+//    SWHalftone(style: .cmyk) {
+//        Image(.facePicture)
+//    }
+//
+//    // Original-color halftone (keeps the photo's natural hues, drops
+//    // the dot mask on top)
 //    SWHalftone(
-//        dotSize: 24,
-//        ink: .pink,
-//        paper: .white
-//    )
+//        style: .dotsGooey,
+//        originalColors: true
+//    ) {
+//        Image(.facePicture)
+//    }
 //
-//    // As a section background
-//    myContent
-//        .background { SWHalftone() }
-//
-//    // Demo / debug — adds a gear button in the navigation bar that
-//    // opens a sheet to tweak every parameter live. Disabled by default.
-//    SWHalftone(showsControls: true)
+//    // Demo / debug — adds a gear button that opens a live-tuning sheet.
+//    // Requires an enclosing `NavigationStack`.
+//    SWHalftone(showsControls: true) {
+//        Image(.facePicture)
+//    }
 //
 //  Parameters:
-//    - ink: Color of the dots (default near-black `#1A1A1A`)
-//    - paper: Color of the background paper
-//             (default warm cream `#F5EFE0`)
-//    - speed: Multiplier on the internal luminance-spot drift time
-//             (default `1.0`)
-//    - dotSize: Cell size in screen pixels — also the maximum dot
-//               diameter. Higher = chunkier print look (default `16`)
-//    - angle: Grid rotation angle in radians. Real CMYK plates use
-//             ~15° / 45° / 75° to avoid moire (default `0.785`, π/4)
-//    - scale: Frequency of the horizontal sin band in the luminance
-//             field — higher = more bands (default `1.0`)
-//    - contrast: Steepness of the luminance → dot-size mapping —
-//                higher = more pure black/white, lower = more midtones
-//                (default `1.6`)
-//    - showsControls: When `true`, adds a gear `ToolbarItem` to the
-//                     enclosing `NavigationStack` that opens a
-//                     live-tuning sheet. Default `false`.
-//
-//  Notes:
-//    - This is a procedural full-screen background; it does NOT apply a
-//      halftone filter to existing content. (That would be a `layerEffect`
-//      and is intentionally not in scope for the current SWMetal family.)
-//    - Dot edges are smoothstepped in screen-pixel units (±0.7) so they
-//      stay anti-aliased at any `dotSize`.
-//    - When `showsControls` is `true`, the gear button is a native
-//      `ToolbarItem` — the call site must be inside a `NavigationStack`.
+//    - style: One of 5 halftone styles (see list above). Default
+//             `.dotsGooey`.
+//    - grid: `.square` or `.hex`. Only affects `.dots*` styles
+//            (default `.square`).
+//    - size: Grid density in `0...1` — small = dense, large = sparse
+//            (default `0.5`).
+//    - radius: Maximum dot size in `0...2` (default `1.0`).
+//    - contrast: Luminance shaping in `0...1` (default `0.5`).
+//    - inverted: Swap dark / light luminance mapping (default `false`).
+//    - originalColors: Keep the sampled image's colors instead of
+//                      replacing with `colorFront` / `colorBack`
+//                      (default `false`, dots styles only).
+//    - grainMixer: 0–1 noise that perturbs dot edges (default `0`).
+//    - grainOverlay: 0–1 black/white grain laid on top (default `0`).
+//    - grainSize: 0–1 grain texture scale (default `0.5`).
+//    - colorFront / colorBack: Ink and paper colors for the `.dots*`
+//                              styles (default `.black` / `.white`).
+//    - colorC / colorM / colorY / colorK: CMYK plate colors for the
+//                              `.cmyk` style.
+//    - colorBack: Paper color (shared between `.dots*` and `.cmyk`).
+//    - showsControls: Attach a gear `ToolbarItem` that opens a
+//                     live-tuning sheet (default `false`).
 //
 //  Created by Wei Zhong on 5/24/26.
 //
 
 import SwiftUI
 
-// MARK: - Main View
+// MARK: - Public types
 
-struct SWHalftone: View {
-    /// Color of the dots.
-    var ink: Color = Color(red: 0.102, green: 0.102, blue: 0.102) // #1A1A1A
+/// Halftone style — picks dot shape & whether to use CMYK plates.
+enum SWHalftoneStyle: Hashable {
+    case dotsClassic
+    case dotsGooey
+    case dotsHoles
+    case dotsSoft
+    case cmyk
 
-    /// Color of the background paper.
-    var paper: Color = Color(red: 0.961, green: 0.937, blue: 0.878) // #F5EFE0
+    /// Whether this style routes to the dots shader (vs the cmyk shader).
+    fileprivate var isDots: Bool { self != .cmyk }
 
-    /// Multiplier on the internal luminance-spot drift time.
-    var speed: Float = 1.0
-
-    /// Cell size in screen pixels.
-    var dotSize: Float = 16
-
-    /// Grid rotation angle in radians (π/4 ≈ 0.785 by default).
-    var angle: Float = 0.785
-
-    /// Frequency of the horizontal sin band in the luminance field.
-    var scale: Float = 1.0
-
-    /// Steepness of the luminance → dot-size mapping.
-    var contrast: Float = 1.6
-
-    /// When `true`, attaches a gear `ToolbarItem` that opens a live-tuning sheet.
-    var showsControls: Bool = false
-
-    var body: some View {
-        if showsControls {
-            SWHalftoneControlled(initial: self)
-        } else {
-            SWHalftoneRenderer(
-                ink: ink,
-                paper: paper,
-                speed: speed,
-                dotSize: dotSize,
-                angle: angle,
-                scale: scale,
-                contrast: contrast
-            )
+    /// Metal `type` parameter for the dots shader (0..3); irrelevant for cmyk.
+    fileprivate var dotsTypeIndex: Int {
+        switch self {
+        case .dotsClassic: return 0
+        case .dotsGooey:   return 1
+        case .dotsHoles:   return 2
+        case .dotsSoft:    return 3
+        case .cmyk:        return 0
         }
     }
 }
 
-// MARK: - Renderer (pure shader binding)
+/// Grid arrangement for the `.dots*` styles. Ignored by `.cmyk`.
+enum SWHalftoneGrid: Hashable {
+    case square
+    case hex
 
-private struct SWHalftoneRenderer: View {
-    let ink: Color
-    let paper: Color
-    let speed: Float
-    let dotSize: Float
-    let angle: Float
-    let scale: Float
-    let contrast: Float
+    fileprivate var index: Int { self == .square ? 0 : 1 }
+}
 
-    @State private var start: Date = .now
+// MARK: - Main View
+
+struct SWHalftone<Content: View>: View {
+    /// One of 5 halftone styles.
+    var style: SWHalftoneStyle = .dotsGooey
+
+    /// Grid arrangement — only meaningful for `.dots*` styles.
+    var grid: SWHalftoneGrid = .square
+
+    /// Grid density in 0...1 — small = dense, large = sparse.
+    var size: Float = 1
+
+    /// Maximum dot size in 0...2.
+    var radius: Float = 1.0
+
+    /// Luminance shaping in 0...1.
+    var contrast: Float = 0.5
+
+    /// Swap dark / light luminance mapping.
+    var inverted: Bool = false
+
+    /// Keep the sampled image's colors rather than replacing with ink/paper.
+    /// Only applies to `.dots*` styles.
+    var originalColors: Bool = false
+
+    /// Noise that perturbs dot edges (0...1).
+    var grainMixer: Float = 0
+
+    /// Black/white grain laid on top of the result (0...1).
+    var grainOverlay: Float = 0
+
+    /// Grain texture scale (0...1).
+    var grainSize: Float = 0.5
+
+    /// Ink color for `.dots*` styles.
+    var colorFront: Color = .black
+
+    /// Paper / background color (used by both `.dots*` and `.cmyk`).
+    var colorBack: Color = .white
+
+    // CMYK plate colors — defaults to the conventional process inks.
+    var colorC: Color = Color(red: 0.000, green: 0.682, blue: 0.937)   // process cyan
+    var colorM: Color = Color(red: 0.925, green: 0.000, blue: 0.549)   // process magenta
+    var colorY: Color = Color(red: 1.000, green: 0.949, blue: 0.000)   // process yellow
+    var colorK: Color = .black
+
+    /// When `true`, attaches a gear `ToolbarItem` that opens a live-tuning sheet.
+    var showsControls: Bool = false
+
+    private let content: Content
+
+    init(
+        style: SWHalftoneStyle = .dotsGooey,
+        grid: SWHalftoneGrid = .square,
+        size: Float = 0.5,
+        radius: Float = 1.0,
+        contrast: Float = 0.5,
+        inverted: Bool = false,
+        originalColors: Bool = false,
+        grainMixer: Float = 0,
+        grainOverlay: Float = 0,
+        grainSize: Float = 0.5,
+        colorFront: Color = .black,
+        colorBack: Color = .white,
+        colorC: Color = Color(red: 0.000, green: 0.682, blue: 0.937),
+        colorM: Color = Color(red: 0.925, green: 0.000, blue: 0.549),
+        colorY: Color = Color(red: 1.000, green: 0.949, blue: 0.000),
+        colorK: Color = .black,
+        showsControls: Bool = false,
+        @ViewBuilder content: () -> Content
+    ) {
+        self.style = style
+        self.grid = grid
+        self.size = size
+        self.radius = radius
+        self.contrast = contrast
+        self.inverted = inverted
+        self.originalColors = originalColors
+        self.grainMixer = grainMixer
+        self.grainOverlay = grainOverlay
+        self.grainSize = grainSize
+        self.colorFront = colorFront
+        self.colorBack = colorBack
+        self.colorC = colorC
+        self.colorM = colorM
+        self.colorY = colorY
+        self.colorK = colorK
+        self.showsControls = showsControls
+        self.content = content()
+    }
 
     var body: some View {
-        TimelineView(.animation) { ctx in
-            let elapsed = Float(ctx.date.timeIntervalSince(start))
-            // Base layer is `paper` so the first frame already looks correct
-            // before the shader fills in the dots.
-            paper
-                .colorEffect(
-                    ShaderLibrary.swHalftone(
-                        .boundingRect,
-                        .float(elapsed),
-                        .float(speed),
-                        .float(dotSize),
-                        .float(angle),
-                        .float(scale),
-                        .float(contrast),
-                        .color(ink),
-                        .color(paper)
-                    )
-                )
+        if showsControls {
+            SWHalftoneControlled(initial: self, content: content)
+        } else {
+            SWHalftoneRenderer(initial: self, content: content)
+        }
+    }
+}
+
+// MARK: - Renderer (routes to dots or cmyk shader)
+
+private struct SWHalftoneRenderer<Content: View>: View {
+    let initial: SWHalftone<Content>
+    let content: Content
+
+    var body: some View {
+        // `maxSampleOffset` tells SwiftUI how far the shader may read.
+        // The halftone grid samples cell centers up to ~`dotSize` away —
+        // 400pt covers all realistic sizes safely.
+        let maxOffset = CGSize(width: 400, height: 400)
+
+        if initial.style.isDots {
+            content.layerEffect(
+                ShaderLibrary.swHalftoneDots(
+                    .boundingRect,
+                    .float(Float(initial.style.dotsTypeIndex)),
+                    .float(Float(initial.grid.index)),
+                    .float(initial.size),
+                    .float(initial.radius),
+                    .float(initial.contrast),
+                    .float(initial.inverted ? 1 : 0),
+                    .float(initial.originalColors ? 1 : 0),
+                    .float(initial.grainMixer),
+                    .float(initial.grainOverlay),
+                    .float(initial.grainSize),
+                    .color(initial.colorFront),
+                    .color(initial.colorBack)
+                ),
+                maxSampleOffset: maxOffset
+            )
+        } else {
+            content.layerEffect(
+                ShaderLibrary.swHalftoneCmyk(
+                    .boundingRect,
+                    .float(initial.size),
+                    .float(initial.contrast),
+                    .color(initial.colorBack),
+                    .color(initial.colorC),
+                    .color(initial.colorM),
+                    .color(initial.colorY),
+                    .color(initial.colorK)
+                ),
+                maxSampleOffset: maxOffset
+            )
         }
     }
 }
 
 // MARK: - Controlled Wrapper (gear toolbar item + live sheet)
 
-private struct SWHalftoneControlled: View {
-    @State private var ink: Color
-    @State private var paper: Color
-    @State private var speed: Float
-    @State private var dotSize: Float
-    @State private var angle: Float
-    @State private var scale: Float
+private struct SWHalftoneControlled<Content: View>: View {
+    @State private var style: SWHalftoneStyle
+    @State private var grid: SWHalftoneGrid
+    @State private var size: Float
+    @State private var radius: Float
     @State private var contrast: Float
+    @State private var inverted: Bool
+    @State private var originalColors: Bool
+    @State private var grainMixer: Float
+    @State private var grainOverlay: Float
+    @State private var grainSize: Float
+    @State private var colorFront: Color
+    @State private var colorBack: Color
+    @State private var colorC: Color
+    @State private var colorM: Color
+    @State private var colorY: Color
+    @State private var colorK: Color
 
     @State private var showSheet = false
 
-    init(initial: SWHalftone) {
-        _ink      = State(initialValue: initial.ink)
-        _paper    = State(initialValue: initial.paper)
-        _speed    = State(initialValue: initial.speed)
-        _dotSize  = State(initialValue: initial.dotSize)
-        _angle    = State(initialValue: initial.angle)
-        _scale    = State(initialValue: initial.scale)
-        _contrast = State(initialValue: initial.contrast)
+    private let content: Content
+
+    init(initial: SWHalftone<Content>, content: Content) {
+        _style           = State(initialValue: initial.style)
+        _grid            = State(initialValue: initial.grid)
+        _size            = State(initialValue: initial.size)
+        _radius          = State(initialValue: initial.radius)
+        _contrast        = State(initialValue: initial.contrast)
+        _inverted        = State(initialValue: initial.inverted)
+        _originalColors  = State(initialValue: initial.originalColors)
+        _grainMixer      = State(initialValue: initial.grainMixer)
+        _grainOverlay    = State(initialValue: initial.grainOverlay)
+        _grainSize       = State(initialValue: initial.grainSize)
+        _colorFront      = State(initialValue: initial.colorFront)
+        _colorBack       = State(initialValue: initial.colorBack)
+        _colorC          = State(initialValue: initial.colorC)
+        _colorM          = State(initialValue: initial.colorM)
+        _colorY          = State(initialValue: initial.colorY)
+        _colorK          = State(initialValue: initial.colorK)
+        self.content = content
     }
 
     var body: some View {
         SWHalftoneRenderer(
-            ink: ink,
-            paper: paper,
-            speed: speed,
-            dotSize: dotSize,
-            angle: angle,
-            scale: scale,
-            contrast: contrast
+            initial: SWHalftone(
+                style: style,
+                grid: grid,
+                size: size,
+                radius: radius,
+                contrast: contrast,
+                inverted: inverted,
+                originalColors: originalColors,
+                grainMixer: grainMixer,
+                grainOverlay: grainOverlay,
+                grainSize: grainSize,
+                colorFront: colorFront,
+                colorBack: colorBack,
+                colorC: colorC,
+                colorM: colorM,
+                colorY: colorY,
+                colorK: colorK
+            ) { content },
+            content: content
         )
-        .ignoresSafeArea()
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Button {
@@ -193,13 +338,22 @@ private struct SWHalftoneControlled: View {
         }
         .sheet(isPresented: $showSheet) {
             SWHalftoneControlsSheet(
-                ink: $ink,
-                paper: $paper,
-                speed: $speed,
-                dotSize: $dotSize,
-                angle: $angle,
-                scale: $scale,
-                contrast: $contrast
+                style: $style,
+                grid: $grid,
+                size: $size,
+                radius: $radius,
+                contrast: $contrast,
+                inverted: $inverted,
+                originalColors: $originalColors,
+                grainMixer: $grainMixer,
+                grainOverlay: $grainOverlay,
+                grainSize: $grainSize,
+                colorFront: $colorFront,
+                colorBack: $colorBack,
+                colorC: $colorC,
+                colorM: $colorM,
+                colorY: $colorY,
+                colorK: $colorK
             )
             .presentationDetents([.medium, .large])
             .presentationDragIndicator(.visible)
@@ -210,33 +364,78 @@ private struct SWHalftoneControlled: View {
 // MARK: - Controls Sheet
 
 private struct SWHalftoneControlsSheet: View {
-    @Binding var ink: Color
-    @Binding var paper: Color
-    @Binding var speed: Float
-    @Binding var dotSize: Float
-    @Binding var angle: Float
-    @Binding var scale: Float
+    @Binding var style: SWHalftoneStyle
+    @Binding var grid: SWHalftoneGrid
+    @Binding var size: Float
+    @Binding var radius: Float
     @Binding var contrast: Float
+    @Binding var inverted: Bool
+    @Binding var originalColors: Bool
+    @Binding var grainMixer: Float
+    @Binding var grainOverlay: Float
+    @Binding var grainSize: Float
+    @Binding var colorFront: Color
+    @Binding var colorBack: Color
+    @Binding var colorC: Color
+    @Binding var colorM: Color
+    @Binding var colorY: Color
+    @Binding var colorK: Color
 
     @Environment(\.dismiss) private var dismiss
+
+    private var isDots: Bool { style.isDots }
 
     var body: some View {
         NavigationStack {
             Form {
-                Section("Colors") {
-                    ColorPicker("Ink",   selection: $ink,   supportsOpacity: false)
-                    ColorPicker("Paper", selection: $paper, supportsOpacity: false)
+                Section("Style") {
+                    Picker("Style", selection: $style) {
+                        Text("Classic").tag(SWHalftoneStyle.dotsClassic)
+                        Text("Gooey").tag(SWHalftoneStyle.dotsGooey)
+                        Text("Holes").tag(SWHalftoneStyle.dotsHoles)
+                        Text("Soft").tag(SWHalftoneStyle.dotsSoft)
+                        Text("CMYK").tag(SWHalftoneStyle.cmyk)
+                    }
+                    if isDots {
+                        Picker("Grid", selection: $grid) {
+                            Text("Square").tag(SWHalftoneGrid.square)
+                            Text("Hex").tag(SWHalftoneGrid.hex)
+                        }
+                        .pickerStyle(.segmented)
+                        Toggle("Inverted",        isOn: $inverted)
+                        Toggle("Original Colors", isOn: $originalColors)
+                    }
+                }
+
+                if isDots {
+                    Section("Ink") {
+                        ColorPicker("Front", selection: $colorFront, supportsOpacity: false)
+                        ColorPicker("Back",  selection: $colorBack,  supportsOpacity: false)
+                    }
+                } else {
+                    Section("Plates") {
+                        ColorPicker("Cyan",    selection: $colorC, supportsOpacity: false)
+                        ColorPicker("Magenta", selection: $colorM, supportsOpacity: false)
+                        ColorPicker("Yellow",  selection: $colorY, supportsOpacity: false)
+                        ColorPicker("Black",   selection: $colorK, supportsOpacity: false)
+                        ColorPicker("Paper",   selection: $colorBack, supportsOpacity: false)
+                    }
                 }
 
                 Section("Grid") {
-                    SliderRow(label: "Dot Size",  value: $dotSize,  range: 4...60,   step: 1)
-                    SliderRow(label: "Angle",     value: $angle,    range: 0...1.57, step: 0.01)
-                    SliderRow(label: "Scale",     value: $scale,    range: 0.1...5,  step: 0.05)
-                    SliderRow(label: "Contrast",  value: $contrast, range: 0.2...5,  step: 0.05)
+                    SliderRow(label: "Size",     value: $size,     range: 0...1, step: 0.01)
+                    if isDots {
+                        SliderRow(label: "Radius", value: $radius, range: 0...2, step: 0.01)
+                    }
+                    SliderRow(label: "Contrast", value: $contrast, range: 0...1, step: 0.01)
                 }
 
-                Section("Motion") {
-                    SliderRow(label: "Speed", value: $speed, range: 0...3, step: 0.05)
+                if isDots {
+                    Section("Grain") {
+                        SliderRow(label: "Mixer",   value: $grainMixer,   range: 0...1, step: 0.01)
+                        SliderRow(label: "Overlay", value: $grainOverlay, range: 0...1, step: 0.01)
+                        SliderRow(label: "Size",    value: $grainSize,    range: 0...1, step: 0.01)
+                    }
                 }
             }
             .navigationTitle("Halftone")
@@ -263,27 +462,31 @@ private struct SliderRow: View {
             HStack {
                 Text(label)
                 Spacer()
-                Text(formattedValue)
+                Text(String(format: "%.2f", value))
                     .font(.callout.monospacedDigit())
                     .foregroundStyle(.secondary)
             }
             Slider(value: $value, in: range, step: step)
         }
     }
-
-    /// Integer-stepped sliders look cleaner as whole numbers.
-    private var formattedValue: String {
-        step >= 1
-            ? "\(Int(value.rounded()))"
-            : String(format: "%.2f", value)
-    }
 }
 
 // MARK: - Preview
 
-#Preview {
-    // ToolbarItem requires an enclosing NavigationStack to render.
+#Preview("Gooey on photo") {
     NavigationStack {
-        SWHalftone(showsControls: true)
+        SWHalftone(showsControls: true) {
+            Image(.facePicture)
+                .resizable()
+                .scaledToFill()
+        }
+    }
+}
+
+#Preview("CMYK plates") {
+    SWHalftone(style: .cmyk) {
+        Image(.facePicture)
+            .resizable()
+            .scaledToFill()
     }
 }
