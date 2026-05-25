@@ -662,6 +662,16 @@ struct ComponentView: View {
             }
 
             ComponentNavigationLink {
+                SWSmokeRing(showsControls: true)
+            } label: {
+                ListItem(
+                    title: "Smoke Ring",
+                    icon: "circle.dashed",
+                    description: "Paper Shaders' smoke-ring procedural background port — polar-coordinate ring distorted by two phase-shifted FBM noise layers that cross-fade so the smoke never visibly loops. 1–10 color gradient + tunable radius / thickness / inner fill / noise iterations. Tap the gear to live-tune."
+                )
+            }
+
+            ComponentNavigationLink {
                 VStack {
                     SWOrbitingLogos(
                         images: ["airpods", "business-shoes", "sunglasses", "tshirt", "wide-brimmed-hat", "golf-gloves", "suit", "golf-gloves"]

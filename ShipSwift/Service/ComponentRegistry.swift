@@ -921,6 +921,26 @@ struct ComponentRegistry {
             presentation: .push
         )
 
+        reg["smoke-ring"] = ComponentEntry(
+            title: "Smoke Ring",
+            icon: "circle.dashed",
+            description: "Metal-shader procedural smoke-ring background (Paper Shaders port) — polar-coordinate ring distorted by two phase-shifted FBM noise layers that cross-fade so the smoke never visibly loops. 1–10 color gradient, tunable radius / thickness / inner fill / noise iterations",
+            preview: {
+                AnyView(
+                    SWSmokeRing()
+                        .frame(height: 150)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                )
+            },
+            fullView: {
+                AnyView(
+                    SWSmokeRing(showsControls: true)
+                        .ignoresSafeArea()
+                )
+            },
+            presentation: .push
+        )
+
         reg["orbiting-logos"] = ComponentEntry(
             title: "Orbiting Logos",
             icon: "atom",
