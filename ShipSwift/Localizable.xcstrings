@@ -944,6 +944,9 @@
     "Black" : {
 
     },
+    "Bold" : {
+
+    },
     "Bottom sheet with text input and confirm button" : {
 
     },
@@ -1012,6 +1015,12 @@
           }
         }
       }
+    },
+    "Char Sphere" : {
+
+    },
+    "Char Sphere Controls" : {
+
     },
     "Chart" : {
 
@@ -1259,6 +1268,12 @@
 
     },
     "Dot Orbit Controls" : {
+
+    },
+    "Dot Sphere" : {
+
+    },
+    "Dot Sphere Controls" : {
 
     },
     "Dots" : {
@@ -1554,6 +1569,9 @@
     "General" : {
 
     },
+    "Geometry" : {
+
+    },
     "Get Started" : {
 
     },
@@ -1566,6 +1584,9 @@
           }
         }
       }
+    },
+    "Glyph Palette (each char placed randomly)" : {
+
     },
     "Gooey" : {
 
@@ -1641,10 +1662,16 @@
     "Heatmap" : {
 
     },
+    "Heavy" : {
+
+    },
     "Hello World" : {
 
     },
     "Hex" : {
+
+    },
+    "Hide back faces" : {
 
     },
     "Highlight" : {
@@ -2006,6 +2033,9 @@
     "Material" : {
 
     },
+    "Medium" : {
+
+    },
     "Message bubbles, text input, voice recording waveform" : {
 
     },
@@ -2146,6 +2176,9 @@
 
     },
     "Palette (%lld / 10)" : {
+
+    },
+    "Palette (%lld)" : {
 
     },
     "Panel %lld" : {
@@ -2607,6 +2640,9 @@
     "Reference" : {
 
     },
+    "Regular" : {
+
+    },
     "Resend Code" : {
 
     },
@@ -2648,6 +2684,9 @@
 
     },
     "Select or capture a photo to extract the subject" : {
+
+    },
+    "Semibold" : {
 
     },
     "Send Reset Code" : {
@@ -3444,6 +3483,9 @@
     "Type a message..." : {
 
     },
+    "Type characters — e.g. 道德经" : {
+
+    },
     "Unable to access camera" : {
 
     },
@@ -3534,6 +3576,9 @@
 
     },
     "Wealth" : {
+
+    },
+    "Weight" : {
 
     },
     "What You Get" : {

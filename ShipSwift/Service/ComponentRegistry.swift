@@ -961,6 +961,46 @@ struct ComponentRegistry {
             presentation: .push
         )
 
+        reg["dot-sphere"] = ComponentEntry(
+            title: "Dot Sphere",
+            icon: "globe.americas.fill",
+            description: "Canvas-rendered rotating 3D dot sphere — N dots distributed via spherical Fibonacci / Vogel spiral, optional morph between random 3D cloud and even sphere, one-axis perspective projection, palette cross-fade waves up the sphere",
+            preview: {
+                AnyView(
+                    SWDotSphere(dotCount: 400, dotSize: 2)
+                        .frame(height: 150)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                )
+            },
+            fullView: {
+                AnyView(
+                    SWDotSphere(showsControls: true)
+                        .ignoresSafeArea()
+                )
+            },
+            presentation: .push
+        )
+
+        reg["char-sphere"] = ComponentEntry(
+            title: "Char Sphere",
+            icon: "character.bubble.fill",
+            description: "Canvas-rendered rotating 3D glyph sphere — any text (1 char tiles, multi-char rotates) is drawn at each spherical Fibonacci point with perspective scaling, back-face culling, color-wave cross-fade up the sphere",
+            preview: {
+                AnyView(
+                    SWCharSphere(glyphCount: 140, fontSize: 9)
+                        .frame(height: 150)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                )
+            },
+            fullView: {
+                AnyView(
+                    SWCharSphere(showsControls: true)
+                        .ignoresSafeArea()
+                )
+            },
+            presentation: .push
+        )
+
         reg["orbiting-logos"] = ComponentEntry(
             title: "Orbiting Logos",
             icon: "atom",

@@ -682,6 +682,26 @@ struct ComponentView: View {
             }
 
             ComponentNavigationLink {
+                SWDotSphere(showsControls: true)
+            } label: {
+                ListItem(
+                    title: "Dot Sphere",
+                    icon: "globe.americas.fill",
+                    description: "Canvas-rendered rotating 3D dot sphere — N dots distributed via spherical Fibonacci / Vogel spiral, optional morph between random 3D cloud and even sphere, one-axis perspective projection, palette cross-fade waves up the sphere. Tap the gear to tune palette, dot count / size, morph, rotation, and fade timing."
+                )
+            }
+
+            ComponentNavigationLink {
+                SWCharSphere(showsControls: true)
+            } label: {
+                ListItem(
+                    title: "Char Sphere",
+                    icon: "character.bubble.fill",
+                    description: "Canvas-rendered rotating 3D glyph sphere — any text (1 char tiles, multi-char rotates) drawn at each spherical Fibonacci point with perspective-scaled font, back-face culling, palette cross-fade waves up the sphere. Tap the gear to edit text, weight, glyph count, font size, palette, morph, rotation, and fade."
+                )
+            }
+
+            ComponentNavigationLink {
                 VStack {
                     SWOrbitingLogos(
                         images: ["airpods", "business-shoes", "sunglasses", "tshirt", "wide-brimmed-hat", "golf-gloves", "suit", "golf-gloves"]
