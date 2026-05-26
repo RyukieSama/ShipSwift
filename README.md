@@ -265,11 +265,11 @@ This project is licensed under the MIT License — see the [LICENSE](LICENSE) fi
 
 ## Star History
 
-<a href="https://www.star-history.com/?repos=signerlabs%2FShipSwift&type=timeline&legend=bottom-right">
+<a href="https://www.star-history.com/?repos=signerlabs%2FShipSwift&type=Date&legend=bottom-right">
  <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/image?repos=signerlabs/ShipSwift&type=timeline&theme=dark&legend=bottom-right&_=20260526" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/image?repos=signerlabs/ShipSwift&type=timeline&legend=bottom-right&_=20260526" />
-   <img alt="Star History Chart" src="https://api.star-history.com/image?repos=signerlabs/ShipSwift&type=timeline&legend=bottom-right&_=20260526" />
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=signerlabs/ShipSwift&type=Date&theme=dark&legend=bottom-right" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=signerlabs/ShipSwift&type=Date&legend=bottom-right" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=signerlabs/ShipSwift&type=Date&legend=bottom-right" />
  </picture>
 </a>
 
