@@ -48,3 +48,25 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
+
+---
+
+## Demo Imagery (Player Cards showcase)
+
+The `SWPlayerCardShowcase` demo applies the foil shaders to scenery photos
+sourced from Wikimedia Commons under the licenses noted below. Attribution is
+provided here as required by the respective licenses.
+
+- `Assets.xcassets/aurora` — "Aurora borealis over Eielson Air Force Base,
+  Alaska." U.S. Air Force photo by Senior Airman Joshua Strang. **Public domain.**
+- `Assets.xcassets/glacier` — "Geikie Plateau Glacier." NASA / Christy Hansen.
+  **Public domain.**
+- `Assets.xcassets/galaxy` — "The Milky Way" (ESO-VLT-Laser). © ESO / Y. Beletsky.
+  **CC BY 4.0** — https://creativecommons.org/licenses/by/4.0/
+- `Assets.xcassets/fireworks` — "New Year's Eve on Sydney Harbour."
+  © Rob Chandler. **CC BY-SA 2.0** — https://creativecommons.org/licenses/by-sa/2.0/
+- `Assets.xcassets/peak` — "Matterhorn from Domhütte." © Zacharie Grossen.
+  **CC BY-SA 3.0** — https://creativecommons.org/licenses/by-sa/3.0/
+
+The two CC BY-SA images retain their share-alike terms; swap them for
+public-domain alternatives if a fully unrestricted bundle is required.

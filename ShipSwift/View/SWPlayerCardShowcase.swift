@@ -40,19 +40,37 @@ private enum CardEffect: Int, CaseIterable, Identifiable {
         }
     }
 
-    /// Asset name for the portrait — Messi / Ronaldo alternate across effects.
+    /// Asset name for the scenery photo paired with each finish.
     var imageName: String {
-        rawValue.isMultiple(of: 2) ? "messi" : "ronaldo"
+        switch self {
+        case .foil:             return "aurora"
+        case .glitter:          return "fireworks"
+        case .intenseBling:     return "galaxy"
+        case .chromaticGlass:   return "glacier"
+        case .polishedAluminum: return "peak"
+        }
     }
 
-    /// Player name printed on the card.
-    var playerName: String {
-        rawValue.isMultiple(of: 2) ? "LIONEL MESSI" : "CRISTIANO RONALDO"
+    /// Scene name printed on the card.
+    var sceneTitle: String {
+        switch self {
+        case .foil:             return "AURORA BOREALIS"
+        case .glitter:          return "FIREWORKS"
+        case .intenseBling:     return "THE MILKY WAY"
+        case .chromaticGlass:   return "GLACIER"
+        case .polishedAluminum: return "THE MATTERHORN"
+        }
     }
 
-    /// Position line printed under the player name.
-    var position: String {
-        rawValue.isMultiple(of: 2) ? "FORWARD · #10" : "FORWARD · #7"
+    /// Location line printed under the scene name.
+    var sceneSubtitle: String {
+        switch self {
+        case .foil:             return "ALASKA · NORTHERN LIGHTS"
+        case .glitter:          return "SYDNEY HARBOUR"
+        case .intenseBling:     return "PARANAL OBSERVATORY"
+        case .chromaticGlass:   return "GREENLAND ICE"
+        case .polishedAluminum: return "SWISS ALPS"
+        }
     }
 }
 
@@ -214,13 +232,13 @@ private struct SWPlayerCard: View {
 
             // Name plate.
             VStack(alignment: .leading, spacing: 4) {
-                Text(effect.playerName)
+                Text(effect.sceneTitle)
                     .font(.title3.weight(.heavy))
                     .foregroundStyle(.white)
                     .lineLimit(1)
                     .minimumScaleFactor(0.6)
 
-                Text(effect.position)
+                Text(effect.sceneSubtitle)
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(.white.opacity(0.8))
                     .tracking(1.5)
