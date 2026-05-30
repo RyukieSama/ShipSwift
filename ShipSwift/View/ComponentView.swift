@@ -1614,6 +1614,17 @@ struct ComponentView: View {
                     description: "Dashboard KPI card with icon, animated numeric value, and customizable trailing slot. Pairs with SWKPIDeltaTag for period-over-period."
                 )
             }
+
+            // Wallet — pouch holding a stack of payment cards with a reveal toggle
+            ComponentNavigationLink {
+                SWWallet()
+            } label: {
+                ListItem(
+                    title: "Wallet",
+                    icon: "wallet.bifold.fill",
+                    description: "Olive-green wallet pouch holding a stack of payment cards. Tap the eye to spring the cards out into a ladder and reveal the total balance."
+                )
+            }
         } header: {
             #if os(iOS)
             Text("Display")

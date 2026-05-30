@@ -1301,7 +1301,7 @@ struct ComponentRegistry {
             presentation: .push
         )
 
-        // -- Display (12) --
+        // -- Display (15) --
 
         reg["floating-labels"] = ComponentEntry(
             title: "Floating Labels",
@@ -1859,6 +1859,31 @@ struct ComponentRegistry {
                             )
                         }
                         .padding()
+                    }
+                )
+            },
+            presentation: .push
+        )
+
+        reg["wallet"] = ComponentEntry(
+            title: "Wallet",
+            icon: "wallet.bifold.fill",
+            description: "Olive-green wallet pouch holding a stack of payment cards with an eye toggle that springs the cards out and reveals the total balance",
+            preview: {
+                AnyView(
+                    SWWallet()
+                        .scaleEffect(0.78, anchor: .center)
+                        .frame(width: 280, height: 300)
+                )
+            },
+            fullView: {
+                AnyView(
+                    ScrollView {
+                        VStack {
+                            SWWallet()
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical)
                     }
                 )
             },
