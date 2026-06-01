@@ -521,6 +521,16 @@ struct ComponentView: View {
             }
 
             ComponentNavigationLink {
+                SWGlassOrb(showsControls: true)
+            } label: {
+                ListItem(
+                    title: "Glass Orb",
+                    icon: "circle.circle",
+                    description: "Drag a refracting glass orb across any view — a circular region magnifies and bends the content with a spherical barrel warp, ringed by a cool Fresnel rim, an upper-left specular hot-spot, and faint edge RGB dispersion so it reads as a solid glass ball. Adapted from Inferno's Warping Loupe by Paul Hudson (MIT). Tap the gear to live-tune radius, magnification, refraction, edge highlight, and dispersion."
+                )
+            }
+
+            ComponentNavigationLink {
                 SWFractalClouds(showsControls: true)
             } label: {
                 ListItem(

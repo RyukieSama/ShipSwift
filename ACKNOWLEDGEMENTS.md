@@ -93,6 +93,52 @@ SOFTWARE.
 
 ---
 
+## Warping Loupe (Glass Orb)
+
+The following ShipSwift component is adapted from the **"Warping Loupe"**
+shader in **Inferno** by Paul Hudson (https://github.com/twostraws/Inferno):
+
+- `SWPackage/SWAnimation/SWMetal/SWGlassOrb.metal` / `SWGlassOrb.swift`
+
+Inferno's `warpingLoupe` is a `[[stitchable]]` SwiftUI `layerEffect` that
+magnifies a circular region of the underlying layer and eases the zoom back
+with distance for a spherical warp. ShipSwift's `swGlassOrb` preserves that
+core refraction maths (the distance-eased magnification that bends straight
+lines into a barrel curve) and builds it into a full glass orb: a cool
+Fresnel rim, an upper-left specular hot-spot, an inner contact shadow, and
+optional rim RGB dispersion, plus drag-to-move and live-tunable parameters.
+The function was renamed with ShipSwift's `sw` prefix and re-wrapped to fit
+the library's conventions, but the loupe refraction logic is preserved from
+the original.
+
+### License
+
+```
+MIT License
+
+Copyright (c) 2023 Paul Hudson and other authors.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
+
+---
+
 ## Demo Imagery (Player Cards showcase)
 
 The `SWPlayerCardShowcase` demo applies the foil shaders to scenery photos

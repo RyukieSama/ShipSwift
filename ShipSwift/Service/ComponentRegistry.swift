@@ -1207,6 +1207,30 @@ struct ComponentRegistry {
             presentation: .push
         )
 
+        reg["glass-orb"] = ComponentEntry(
+            title: "Glass Orb",
+            icon: "circle.circle",
+            description: "Metal layer-effect that refracts any view through a draggable glass orb — a circular region magnifies and barrel-warps the content, ringed by a Fresnel rim, an upper-left specular hot-spot, and edge RGB dispersion for a solid glass-ball look",
+            preview: {
+                AnyView(
+                    SWGlassOrb(radius: 70)
+                        .frame(width: 140, height: 190)
+                        .clipShape(RoundedRectangle(cornerRadius: 16))
+                )
+            },
+            fullView: {
+                AnyView(
+                    VStack {
+                        SWGlassOrb(showsControls: true)
+                            .frame(height: 360)
+                            .clipShape(RoundedRectangle(cornerRadius: 16))
+                            .padding()
+                    }
+                )
+            },
+            presentation: .push
+        )
+
         #if os(iOS)
         // SWFullScreenButton uses iOS 18 `.navigationTransition(.zoom)`, which is
         // unavailable on macOS. The entry is therefore only registered for iOS.
