@@ -752,6 +752,16 @@ struct ComponentView: View {
             }
 
             ComponentNavigationLink {
+                SWConfettiShowcase()
+            } label: {
+                ListItem(
+                    title: "Confetti",
+                    icon: "party.popper",
+                    description: "Celebration confetti burst overlay with Canvas-rendered particles at 60fps. Toggle between classic confetti and a Marina Bay Sands fireworks show with launch trails, blur glow, and water reflections."
+                )
+            }
+
+            ComponentNavigationLink {
                 VStack {
                     SWOrbitingLogos(
                         images: ["airpods", "business-shoes", "sunglasses", "tshirt", "wide-brimmed-hat", "golf-gloves", "suit", "golf-gloves"]

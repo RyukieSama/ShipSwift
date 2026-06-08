@@ -1247,6 +1247,29 @@ struct ComponentRegistry {
             presentation: .push
         )
 
+        reg["confetti"] = ComponentEntry(
+            title: "Confetti",
+            icon: "party.popper",
+            description: "Celebration confetti burst overlay with Canvas-rendered particles — 4 shapes, customisable colors, gravity, and spread",
+            preview: {
+                AnyView(
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(.gray.opacity(0.1))
+                            .frame(height: 120)
+                        Text("🎉 Confetti")
+                            .font(.headline)
+                    }
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                )
+            },
+            fullView: {
+                AnyView(SWConfettiShowcase())
+            },
+            presentation: .push
+        )
+
         reg["glass-logo"] = ComponentEntry(
             title: "Glass Logo",
             icon: "apple.logo",
