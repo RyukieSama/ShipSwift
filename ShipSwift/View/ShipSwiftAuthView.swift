@@ -10,8 +10,6 @@
 //
 
 import SwiftUI
-import Amplify
-import AWSCognitoAuthPlugin
 
 #if os(iOS)
 private typealias SWTextContentType = UITextContentType
@@ -509,46 +507,34 @@ struct ShipSwiftAuthView: View {
 
     private func showError(_ error: Error) {
         swDebugLog("Auth error: \(error)")
-        let message: String
-        if let authError = error as? AuthError {
-            swDebugLog("AuthError: \(authError.errorDescription), underlying: \(String(describing: authError.underlyingError))")
-            if let cognitoError = authError.underlyingError as? AWSCognitoAuthError {
-                message = cognitoMessage(cognitoError)
-            } else {
-                message = authMessage(authError)
-            }
-        } else {
-            message = error.localizedDescription
-        }
+        let message = serviceMessage(error)
         SWAlertManager.shared.show(.error, message: message)
     }
 
-    private func authMessage(_ error: AuthError) -> String {
-        switch error {
-        case .notAuthorized:
-            return String(localized: "auth.error.incorrect")
-        case .validation:
-            return String(localized: "auth.error.invalid")
-        default:
-            let desc = error.errorDescription.lowercased()
-            if desc.contains("incorrect username or password") { return String(localized: "auth.error.incorrect") }
-            if desc.contains("user does not exist") { return String(localized: "auth.error.not_registered") }
-            if desc.contains("user is not confirmed") { return String(localized: "auth.error.not_verified") }
-            return String(localized: "auth.error.generic")
+    private func serviceMessage(_ error: Error) -> String {
+        guard let serviceError = error as? SWServiceError else {
+            return error.localizedDescription
         }
-    }
 
-    private func cognitoMessage(_ error: AWSCognitoAuthError) -> String {
-        switch error {
-        case .userNotFound:      String(localized: "auth.error.not_registered")
-        case .userNotConfirmed:  String(localized: "auth.error.not_verified")
-        case .usernameExists:    String(localized: "auth.error.email_exists")
-        case .codeMismatch:      String(localized: "auth.error.wrong_code")
-        case .codeExpired:       String(localized: "auth.error.code_expired")
-        case .invalidPassword:   String(localized: "auth.error.weak_password")
-        case .limitExceeded, .requestLimitExceeded:
-            String(localized: "auth.error.rate_limit")
-        default:                 String(localized: "auth.error.generic_short")
+        switch serviceError {
+        case .unauthorized:
+            return String(localized: "auth.error.incorrect")
+        case .userProfileNotFound:
+            return String(localized: "auth.error.not_registered")
+        case .userAlreadyExists:
+            return String(localized: "auth.error.email_exists")
+        case .validationError(let message):
+            if message.localizedCaseInsensitiveContains("verification code") {
+                return String(localized: "auth.error.wrong_code")
+            }
+            if message.localizedCaseInsensitiveContains("8 characters") {
+                return String(localized: "auth.error.weak_password")
+            }
+            return String(localized: "auth.error.invalid")
+        case .networkError, .timeout:
+            return String(localized: "auth.error.generic_short")
+        case .notSignedIn, .tokenMissing, .invalidState, .invalidURL, .serverError, .decodingError, .encodingError, .invalidResponse, .unknown:
+            return String(localized: "auth.error.generic")
         }
     }
 }

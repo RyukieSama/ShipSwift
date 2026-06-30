@@ -7,11 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		9B1A79252F51C2C800DDF343 /* TikTokBusinessSDK in Frameworks */ = {isa = PBXBuildFile; platformFilter = ios; productRef = 9B1A79242F51C2C800DDF343 /* TikTokBusinessSDK */; };
-		9B98BB222F27490700CA9857 /* AWSAPIPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 9B98BB212F27490700CA9857 /* AWSAPIPlugin */; };
-		9B98BB242F27490700CA9857 /* AWSCognitoAuthPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 9B98BB232F27490700CA9857 /* AWSCognitoAuthPlugin */; };
-		9B98BB262F27490700CA9857 /* AWSPluginsCore in Frameworks */ = {isa = PBXBuildFile; productRef = 9B98BB252F27490700CA9857 /* AWSPluginsCore */; };
-		9B98BB282F27490700CA9857 /* Amplify in Frameworks */ = {isa = PBXBuildFile; productRef = 9B98BB272F27490700CA9857 /* Amplify */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -65,11 +60,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9B98BB222F27490700CA9857 /* AWSAPIPlugin in Frameworks */,
-				9B1A79252F51C2C800DDF343 /* TikTokBusinessSDK in Frameworks */,
-				9B98BB282F27490700CA9857 /* Amplify in Frameworks */,
-				9B98BB242F27490700CA9857 /* AWSCognitoAuthPlugin in Frameworks */,
-				9B98BB262F27490700CA9857 /* AWSPluginsCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -111,13 +101,6 @@
 				B69605EF2EEFD462006F81F3 /* ShipSwift */,
 			);
 			name = ShipSwift;
-			packageProductDependencies = (
-				9B98BB212F27490700CA9857 /* AWSAPIPlugin */,
-				9B98BB232F27490700CA9857 /* AWSCognitoAuthPlugin */,
-				9B98BB252F27490700CA9857 /* AWSPluginsCore */,
-				9B98BB272F27490700CA9857 /* Amplify */,
-				9B1A79242F51C2C800DDF343 /* TikTokBusinessSDK */,
-			);
 			productName = ShipSwift;
 			productReference = B69605ED2EEFD462006F81F3 /* ShipSwift.app */;
 			productType = "com.apple.product-type.application";
@@ -147,10 +130,6 @@
 			);
 			mainGroup = B69605E42EEFD462006F81F3;
 			minimizedProjectReferenceProxies = 1;
-			packageReferences = (
-				9B98BB202F27490700CA9857 /* XCRemoteSwiftPackageReference "amplify-swift" */,
-				9B1A79232F51C2C800DDF343 /* XCRemoteSwiftPackageReference "tiktok-business-ios-sdk" */,
-			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B69605EE2EEFD462006F81F3 /* Products */;
 			projectDirPath = "";
@@ -443,52 +422,6 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCRemoteSwiftPackageReference section */
-		9B1A79232F51C2C800DDF343 /* XCRemoteSwiftPackageReference "tiktok-business-ios-sdk" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/tiktok/tiktok-business-ios-sdk";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.6.0;
-			};
-		};
-		9B98BB202F27490700CA9857 /* XCRemoteSwiftPackageReference "amplify-swift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/aws-amplify/amplify-swift";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.53.3;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		9B1A79242F51C2C800DDF343 /* TikTokBusinessSDK */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 9B1A79232F51C2C800DDF343 /* XCRemoteSwiftPackageReference "tiktok-business-ios-sdk" */;
-			productName = TikTokBusinessSDK;
-		};
-		9B98BB212F27490700CA9857 /* AWSAPIPlugin */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 9B98BB202F27490700CA9857 /* XCRemoteSwiftPackageReference "amplify-swift" */;
-			productName = AWSAPIPlugin;
-		};
-		9B98BB232F27490700CA9857 /* AWSCognitoAuthPlugin */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 9B98BB202F27490700CA9857 /* XCRemoteSwiftPackageReference "amplify-swift" */;
-			productName = AWSCognitoAuthPlugin;
-		};
-		9B98BB252F27490700CA9857 /* AWSPluginsCore */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 9B98BB202F27490700CA9857 /* XCRemoteSwiftPackageReference "amplify-swift" */;
-			productName = AWSPluginsCore;
-		};
-		9B98BB272F27490700CA9857 /* Amplify */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 9B98BB202F27490700CA9857 /* XCRemoteSwiftPackageReference "amplify-swift" */;
-			productName = Amplify;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = B69605E52EEFD462006F81F3 /* Project object */;
 }

@@ -6,11 +6,6 @@
 //
 
 import SwiftUI
-import Amplify
-import AWSCognitoAuthPlugin
-#if os(iOS)
-import TikTokBusinessSDK
-#endif
 
 @main
 struct ShipSwiftApp: App {
@@ -19,11 +14,7 @@ struct ShipSwiftApp: App {
     @Environment(\.scenePhase) private var scenePhase
 
     init() {
-        configureAmplify()
         configureStore()
-        #if os(iOS)
-        configureTikTok()
-        #endif
     }
 
     var body: some Scene {
@@ -47,35 +38,6 @@ struct ShipSwiftApp: App {
         }
         #endif
     }
-
-    private func configureAmplify() {
-        do {
-            try Amplify.add(plugin: AWSCognitoAuthPlugin())
-            try Amplify.configure(with: .amplifyOutputs)
-        } catch {
-            swDebugLog("Failed to configure Amplify: \(error)")
-        }
-    }
-
-    #if os(iOS)
-    private func configureTikTok() {
-        guard let config = TikTokConfig(
-            accessToken: SWSecrets.TikTok.accessToken,
-            appId: SWSecrets.TikTok.appId,
-            tiktokAppId: SWSecrets.TikTok.tiktokAppId
-        ) else { return }
-        #if DEBUG
-        config.enableDebugMode()
-        #endif
-        TikTokBusiness.initializeSdk(config)
-
-        SWTikTokTrackingManager.shared.configure { eventName, properties in
-            let event = TikTokBaseEvent(eventName: eventName)
-            properties?.forEach { event.addProperty(withKey: $0.key, value: $0.value) }
-            TikTokBusiness.trackTTEvent(event)
-        }
-    }
-    #endif
 
     private func configureStore() {
         storeManager.config.lifetimeProductID = "com.signerlabs.shipswift.lifetime"

@@ -42,8 +42,6 @@
 //
 
 import SwiftUI
-import Amplify
-import AWSCognitoAuthPlugin
 
 struct SWAuthView: View {
 
@@ -1079,70 +1077,40 @@ struct SWAuthView: View {
 /// Scoped to this file to avoid polluting the global Error namespace in consuming apps.
 private enum SWAuthErrorHelper {
 
-    /// Returns a user-friendly message for any error thrown by Amplify Auth operations
+    /// Returns a user-friendly message for any error thrown by demo auth operations.
     static func displayMessage(for error: Error) -> String {
-        if let authError = error as? AuthError {
-            if let cognitoError = authError.underlyingError as? AWSCognitoAuthError {
-                return cognitoMessage(for: cognitoError)
-            }
-            return authMessage(for: authError)
+        if let serviceError = error as? SWServiceError {
+            return serviceMessage(for: serviceError)
         }
         return error.localizedDescription
     }
 
-    // MARK: - AuthError Messages
+    // MARK: - SWServiceError Messages
 
-    private static func authMessage(for error: AuthError) -> String {
+    private static func serviceMessage(for error: SWServiceError) -> String {
         switch error {
-        case .notAuthorized:
+        case .unauthorized:
             return "Incorrect email or password"
-        case .signedOut:
+        case .notSignedIn, .tokenMissing:
             return "Please sign in first"
-        case .validation:
-            return "Invalid input"
-        case .configuration:
-            return "App configuration error"
-        case .service, .unknown, .invalidState:
-            let desc = error.errorDescription.lowercased()
-            if desc.contains("incorrect username or password") {
-                return "Incorrect email or password"
-            }
-            if desc.contains("user does not exist") || desc.contains("user not found") {
-                return "This email is not registered"
-            }
-            if desc.contains("user is not confirmed") {
-                return "Please verify your email first"
-            }
-            return "Service error, please try again"
-        default:
-            return "Operation failed, please try again"
-        }
-    }
-
-    // MARK: - AWSCognitoAuthError Messages
-
-    private static func cognitoMessage(for error: AWSCognitoAuthError) -> String {
-        switch error {
-        case .userNotFound:
+        case .userProfileNotFound:
             return "This email is not registered"
-        case .userNotConfirmed:
-            return "Please verify your email first"
-        case .usernameExists:
+        case .userAlreadyExists:
             return "This email is already registered"
-        case .codeDelivery:
-            return "Failed to send verification code"
-        case .codeMismatch:
-            return "Incorrect verification code"
-        case .codeExpired:
-            return "Verification code expired"
-        case .invalidPassword:
-            return "Password must be at least 8 characters"
-        case .limitExceeded, .failedAttemptsLimitExceeded, .requestLimitExceeded, .limitExceededException:
-            return "Too many attempts, please try again later"
-        case .network, .lambda, .externalServiceException:
+        case .validationError(let message):
+            if message.localizedCaseInsensitiveContains("verification code") {
+                return "Incorrect verification code"
+            }
+            if message.localizedCaseInsensitiveContains("8 characters") {
+                return "Password must be at least 8 characters"
+            }
+            return message
+        case .invalidState:
+            return "Please request a new verification code and try again"
+        case .networkError, .timeout:
             return "Network error, please try again"
-        default:
-            return "An error occurred, please try again"
+        case .serverError, .unknown, .invalidResponse, .decodingError, .encodingError, .invalidURL:
+            return "Service error, please try again"
         }
     }
 }
